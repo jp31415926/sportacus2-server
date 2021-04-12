@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-	//_id: mongoose.Schema.Types.ObjectId,
+	username: {
+		type: String,
+		unique: true,
+		required: true,
+		match: /[a-z0-9_]+/
+	},
 	firstName: {
 		type: String,
 		required: true

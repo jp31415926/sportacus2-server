@@ -1,3 +1,4 @@
+const appConfig = require('../config');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -6,7 +7,7 @@ const User = require('../models/user');
 //const Post = require('../models/post');
 
 module.exports = {
-	createUser: async function ({ userInput }, req) {
+	signup: async function ({ userInput }, req) {
 		//   const email = args.userInput.email;
 		const errors = [];
 		if (!validator.isEmail(userInput.email)) {
@@ -18,6 +19,13 @@ module.exports = {
 		) {
 			errors.push({ message: 'Password too short!' });
 		}
+		if (
+			validator.isEmpty(userInput.username) ||
+			!validator.isLength(userInput.username, { min: 2 })
+		) {
+			errors.push({ message: 'Username too short!' });
+		}
+
 		if (errors.length > 0) {
 			const error = new Error('Invalid input.');
 			error.data = errors;
@@ -31,6 +39,7 @@ module.exports = {
 		}
 		const hashedPw = await bcrypt.hash(userInput.password, 12);
 		const user = new User({
+			username: userInput.username,
 			email: userInput.email,
 			firstName: userInput.firstName,
 			lastName: userInput.lastName,
@@ -39,12 +48,17 @@ module.exports = {
 		const createdUser = await user.save();
 		return { ...createdUser._doc, _id: createdUser._id.toString() };
 	},
-	login: async function ({ email, password }) {
-		const user = await User.findOne({ email: email });
+
+
+	login: async function ({ emailOrUsername, password }) {
+		let user = await User.findOne({ username: emailOrUsername });
 		if (!user) {
-			const error = new Error('User not found.');
-			error.code = 401;
-			throw error;
+			user = await User.findOne({ email: emailOrUsername });
+			if (!user) {
+				const error = new Error('User not found.');
+				error.code = 401;
+				throw error;
+			}
 		}
 		const isEqual = await bcrypt.compare(password, user.password);
 		if (!isEqual) {
@@ -57,7 +71,7 @@ module.exports = {
 				userId: user._id.toString(),
 				email: user.email
 			},
-			'somesupersecretsecret',
+			appConfig.secret,
 			{ expiresIn: '1h' }
 		);
 		return { token: token, userId: user._id.toString() };
