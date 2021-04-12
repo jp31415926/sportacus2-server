@@ -5,6 +5,45 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
+/*
+Example query to create a new user:
+
+mutation {
+	createUser(userInput:
+		{
+			firstName: "Brainy",
+			lastName: "Smurf",
+			email: "brainy@smurf.com",
+			password: "password"
+		})
+	{
+		_id
+		email
+	}
+}
+
+Example response:
+{
+	"data": {
+		"createUser": {
+			"_id": "60748b151cff292c99e7ad95",
+			"email": "brainy@smurf.com"
+		}
+	}
+}
+
+Or ERROR:
+{
+	"errors": [
+		{
+			"message": "User exists already!",
+			"status": 500
+		}
+	],
+	"data": null
+}
+*/
+
 exports.signup = async (req, res, next) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -31,6 +70,41 @@ exports.signup = async (req, res, next) => {
 		next(err);
 	}
 };
+
+/*
+Example login query:
+
+{
+	login(email: "brainy@smurf.com", password: "password") {
+		token
+		userId
+	}
+}
+
+Example result:
+{
+	"data": {
+		"login": {
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0ODY1ZGE4NWQ4YzJjNzRjNDRhMjgiLCJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE2MTgyNTA0MTAsImV4cCI6MTYxODI1NDAxMH0.TRTtPcSO5rYSNSONRVK3cvTYnK7i_bPkL0zRrIa2hp8",
+			"userId": "6074865da85d8c2c74c44a28"
+		}
+	}
+}
+
+OR error:
+
+{
+	"errors": [
+		{
+			"message": "Password is incorrect.",
+			"status": 401
+		}
+	],
+	"data": null
+}
+
+*/
+
 
 exports.login = async (req, res, next) => {
 	const email = req.body.email;
