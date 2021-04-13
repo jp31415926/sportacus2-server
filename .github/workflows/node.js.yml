@@ -1,0 +1,50 @@
+# Sportacus2 Server Continuous Intergration
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+# TODO: how do I setup mongoDB and connect to it within the test env??? Or is there a better way to test an API?
+
+name: Sportacus2 Server Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+				# See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        # node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [10.x 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache node modules ${{ matrix.node-version }}
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        #path: ~/.npm
+        path: ~/.npm node_modules
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+		- name: Install dependencies
+    - run: NODE_ENV=production npm ci
+		- name: Run tests
+    - run: npm test

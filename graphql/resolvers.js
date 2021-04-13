@@ -71,7 +71,7 @@ module.exports = {
 				userId: user._id.toString(),
 				email: user.email
 			},
-			appConfig.secret,
+			appConfig.app.secret,
 			{ expiresIn: '1h' }
 		);
 		return { token: token, userId: user._id.toString() };

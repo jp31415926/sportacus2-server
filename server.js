@@ -39,6 +39,7 @@ const fileFilter = (req, file, cb) => {
 	}
 };
 
+
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -71,7 +72,7 @@ app.use(
 	'/graphql', graphqlHTTP({
 		schema: graphqlSchema,
 		rootValue: graphqlResolver,
-		graphiql: true,
+		graphiql: appConfig.env === 'development', // only enable graphiql in development environment
 		formatError(err) {
 			if (!err.originalError) {
 				return err;
@@ -106,9 +107,10 @@ app.use((error, req, res, next) => {
 });
 
 // connect to database, and if successful, start server
-mongoose.connect("mongodb://" + appConfig.dbhostname + ":" + appConfig.dbport + "/" + appConfig.dbname)
+mongoose.connect("mongodb://" + appConfig.db.hostname + ":" + appConfig.db.port + "/" + appConfig.db.name,
+	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 	.then(result => {
-		app.listen(appConfig.listenport);
+		app.listen(appConfig.app.port);
 	})
 	.catch(err => console.log(err));
 
