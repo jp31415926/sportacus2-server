@@ -6,7 +6,7 @@ const schema = new Schema({
 		type: String,
 		unique: true,
 		required: true,
-		match: /[a-z0-9_]+/
+		match: /[a-zA-Z0-9_]+/
 	},
 	firstName: {
 		type: String,
@@ -27,6 +27,12 @@ const schema = new Schema({
 		type: String,
 		required: true
 	},
+	// createdAt: {
+	// 	type: date,
+	// },
+	// updatedAt: {
+	// 	type: date,
+	// },
 });
 
 module.exports = mongoose.model("User", schema);

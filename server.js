@@ -7,10 +7,15 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
+const graphqlTools = require('graphql-tools');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+const { addResolversToSchema } = require('@graphql-tools/schema');
+const { loadFilesSync } = require('@graphql-tools/load-files');
 
-const graphqlSchema = require('./graphql/schema');
+//const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/check-auth');
+//FIXME: const acl = require('./middleware/acl');
 
 const app = express();
 
@@ -68,10 +73,23 @@ app.use((req, res, next) => {
 
 app.use(auth);
 
+const graphqlSchema = loadFilesSync(path.join(__dirname, 'graphql', '*.graphql'), { extensions: ['graphql'] });
+//console.log(graphqlSchema[0]);
+// Add resolvers to the schema
+// const schemaWithResolvers = addResolversToSchema({
+// 	graphqlSchema,
+// 	graphqlResolver,
+// });
+const schemaWithResolvers = makeExecutableSchema({
+	typeDefs: graphqlSchema,
+	resolvers: graphqlResolver,
+});
+
 app.use(
 	'/graphql', graphqlHTTP({
-		schema: graphqlSchema,
-		rootValue: graphqlResolver,
+		schema: schemaWithResolvers,
+		//schema: graphqlSchema,
+		//rootValue: graphqlResolver,
 		graphiql: appConfig.env === 'development', // only enable graphiql in development environment
 		formatError(err) {
 			if (!err.originalError) {
@@ -110,6 +128,7 @@ app.use((error, req, res, next) => {
 mongoose.connect("mongodb://" + appConfig.db.hostname + ":" + appConfig.db.port + "/" + appConfig.db.name,
 	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 	.then(result => {
+		// Or Using the MongoDB backend
 		app.listen(appConfig.app.port);
 	})
 	.catch(err => console.log(err));

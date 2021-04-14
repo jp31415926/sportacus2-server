@@ -1,0 +1,37 @@
+schema {
+	query: RootQuery
+	mutation: RootMutation
+}
+
+type AuthData {
+  token: String!
+  userId: String!
+}
+
+type RootMutation {
+  signup(userInput: UserInputData): User!
+  createUser(userInput: UserInputData): User!
+  deleteUser(_id: ID!): Boolean
+}
+
+type RootQuery {
+  login(emailOrUsername: String!, password: String!): AuthData!
+  getUser(_id: ID!): User
+}
+
+type User {
+  _id: ID!
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+input UserInputData {
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+

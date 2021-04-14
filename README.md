@@ -96,7 +96,7 @@ Or ERROR:
 Example login query:
 
     {
-      login(email: "brainy@smurf.com", password: "password") {
+      login(emailOrUsername: "brainy@smurf.com", password: "password") {
         token
         userId
       }
