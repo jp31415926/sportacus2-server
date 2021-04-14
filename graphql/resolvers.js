@@ -2,9 +2,13 @@ const appConfig = require('../config');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const { composeResolvers } = require('@graphql-tools/resolvers-composition');
 
 const User = require('../models/user');
 //const Post = require('../models/post');
+
+
+
 
 async function createUser({ userInput }) {
 	const errors = [];
@@ -64,7 +68,7 @@ async function createUser({ userInput }) {
 }
 
 
-module.exports = {
+const resolvers = {
 	RootMutation: {
 		signup: async function (_, { userInput }, req) {
 			const createdUser = createUser({ userInput });
@@ -78,12 +82,6 @@ module.exports = {
 		},
 
 		deleteUser: async function (_, { _id }, req) {
-			// TODO: CHECK PERMISSIONS HERE!
-			if (!req.isAuth) {
-				const error = new Error('Not authenticated!');
-				error.code = 401;
-				throw error;
-			}
 			const user = await User.findById(_id);
 			if (!user) {
 				const error = new Error('User not found.');
@@ -124,12 +122,6 @@ module.exports = {
 		},
 
 		getUser: async function (_, { _id }, req) {
-			// TODO: CHECK PERMISSIONS HERE!
-			if (!req.isAuth) {
-				const error = new Error('Not authenticated!');
-				error.code = 401;
-				throw error;
-			}
 			const user = await User.findById(_id);
 			if (!user) {
 				const error = new Error('User not found.');
@@ -193,3 +185,31 @@ module.exports = {
 	//   };
 	//}
 };
+
+const isAuthenticated = () => next => async (_, args, req, info) => {
+	// check if the current user is authenticated
+	if (!req.isAuth) {
+		const error = new Error('Not authenticated!');
+		error.code = 401;
+		throw error;
+	}
+
+	return next(_, args, req, info);
+};
+
+const hasPermission = (resource, permission) => next => async (_, args, req, info) => {
+	// check if current user has the provided role
+	console.log('check if user has ' + permission + ' permission for ' + resource + ' resource')
+	//if (!context.currentUser.roles || context.currentUser.roles.includes(role)) {
+	//	throw new Error('You are not authorized!');
+	//}
+
+	return next(_, args, req, info);
+};
+
+const resolversComposition = {
+	'RootMutation.deleteUser': [isAuthenticated(), hasPermission('user', 'delete')],
+	'RootQuery.getUser': [isAuthenticated(), hasPermission('user', 'view')],
+};
+
+module.exports = composeResolvers(resolvers, resolversComposition);
