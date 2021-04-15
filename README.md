@@ -12,6 +12,17 @@ This server is designed to run on a Linux-like OS. It will probably work on Wind
     Install locally on Windows:
     https://www.mongodb.com/try/download/community
 	
+    Helpful database client (download "Robo 3T Only"):
+    https://robomongo.org/download
+
+    Maybe this creates a database user?
+
+    db.createUser({
+      user: "s2db",
+      pwd: "sportacus2-db-password",
+      roles: [ "dbAdmin", "readWrite" ]
+    });
+
 	  Use free cloud solution MondoDB Atlas:
     https://www.mongodb.com/cloud/atlas
 
