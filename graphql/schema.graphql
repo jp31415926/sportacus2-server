@@ -3,20 +3,21 @@ schema {
 	mutation: RootMutation
 }
 
+scalar DateTime
+
 type AuthData {
   token: String!
   userId: String!
 }
 
 type RootMutation {
-  signup(userInput: UserInputData): User!
-  createUser(userInput: UserInputData): User!
-  deleteUser(_id: ID!): Boolean
+  createUser(userInput: UserInput): User!
+  deleteUser(_id: ID!): Boolean!
 }
 
 type RootQuery {
   login(emailOrUsername: String!, password: String!): AuthData!
-  getUser(_id: ID!): User
+  getUser(_id: ID!): User!
 }
 
 type User {
@@ -25,9 +26,11 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
+	createdAt: String!
+	updatedAt: String!
 }
 
-input UserInputData {
+input UserInput {
   username: String!
   firstName: String!
   lastName: String!

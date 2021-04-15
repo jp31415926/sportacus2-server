@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const schema = new Schema({
 	username: {
@@ -27,12 +27,10 @@ const schema = new Schema({
 		type: String,
 		required: true
 	},
-	// createdAt: {
-	// 	type: date,
-	// },
-	// updatedAt: {
-	// 	type: date,
-	// },
-});
+},
+	{ timestamps: true }
+);
+
+//schema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
 
 module.exports = mongoose.model("User", schema);

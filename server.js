@@ -7,9 +7,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
-const graphqlTools = require('graphql-tools');
+//const graphqlTools = require('graphql-tools');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-const { addResolversToSchema } = require('@graphql-tools/schema');
+//const { addResolversToSchema } = require('@graphql-tools/schema');
 const { loadFilesSync } = require('@graphql-tools/load-files');
 
 //const graphqlSchema = require('./graphql/schema');
@@ -73,17 +73,13 @@ app.use((req, res, next) => {
 
 app.use(auth);
 
-const graphqlSchema = loadFilesSync(path.join(__dirname, 'graphql', '*.graphql'), { extensions: ['graphql'] });
-//console.log(graphqlSchema[0]);
-// Add resolvers to the schema
-// const schemaWithResolvers = addResolversToSchema({
-// 	graphqlSchema,
-// 	graphqlResolver,
-// });
+//const graphqlSchema = loadFilesSync(path.join(__dirname, 'graphql', '*.graphql'), { extensions: ['graphql'] });
+const graphqlSchema = loadFilesSync(path.join(__dirname, 'graphql', '*.graphql'));
+
 const schemaWithResolvers = makeExecutableSchema({
 	typeDefs: graphqlSchema,
 	resolvers: graphqlResolver,
-});
+})
 
 app.use(
 	'/graphql', graphqlHTTP({
@@ -125,11 +121,19 @@ app.use((error, req, res, next) => {
 });
 
 // connect to database, and if successful, start server
-mongoose.connect("mongodb://" + appConfig.db.hostname + ":" + appConfig.db.port + "/" + appConfig.db.name,
+console.log('Connecting to DB');
+//mongoose.connect('mongodb://' + appConfig.db.user + ':' + appConfig.db.pass + '@' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
+mongoose.connect('mongodb://' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
 	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 	.then(result => {
-		// Or Using the MongoDB backend
+		console.log('Starting mongodbBackend');
+		acl = new require('acl2').mongodbBackend({ db: mongoose.connection.db, useSingle: true });
+
+		console.log('Listening on port ' + appConfig.app.port);
 		app.listen(appConfig.app.port);
 	})
-	.catch(err => console.log(err));
+	.catch(err => {
+		console.log(err);
+		console.log('landed in bottom catch block')
+	});
 
