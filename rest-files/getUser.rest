@@ -1,0 +1,15 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc2NGRlYmUyNmE2NzVkYjIxYjM3MDEiLCJlbWFpbCI6ImJyYWlueUBzbXVyZi5jb20iLCJpYXQiOjE2MTg0NjEwMjEsImV4cCI6MTYxODQ2NDYyMX0.giEtd_ZoKLnQCEXVBvNOfxzdTKLph351aZfX_T2VJX0
+
+query {
+  getUser(_id: "6077d94375f56107c24238f2") {
+		username
+		firstName
+		lastName
+		email
+		createdAt
+		updatedAt
+	}
+}

@@ -1,0 +1,7 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+	deleteUser(_id: "6077d900c501200789845c6f")
+}
