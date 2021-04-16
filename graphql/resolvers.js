@@ -228,6 +228,31 @@ const resolvers = {
 				updatedAt: user.updatedAt.toISOString(),
 			};
 		},
+
+		getUsers: async function (_, { perPage = 20, page = 1 }, req) {
+			const total = await User.countDocuments();
+			const items = await User.find()
+				.sort('createdAt')
+				.skip((page - 1) * perPage)
+				.limit(perPage);
+			if (!items) {
+				const error = new Error('No users found that match criteria.');
+				error.code = 401;
+				throw error;
+			}
+
+			return {
+				users: items.map(i => {
+					return {
+						...i._doc,
+						_id: i._id.toString(),
+						createdAt: i.createdAt.toISOString(),
+						updatedAt: i.updatedAt.toISOString(),
+					}
+				}),
+				total: total,
+			};
+		},
 	},
 
 };
@@ -246,7 +271,7 @@ const isAuthenticated = () => next => async (_, args, req, info) => {
 
 const hasPermission = (resource, permission) => next => async (_, args, req, info) => {
 	// check if current user has the provided role
-	console.log('check if user has ' + permission + ' permission for ' + resource + ' resource')
+	console.log('check if user ' + req.userId + ' has ' + permission + ' permission for ' + resource + ' resource')
 	//if (!context.currentUser.roles || context.currentUser.roles.includes(role)) {
 	//	throw new Error('You are not authorized!');
 	//}
@@ -256,6 +281,7 @@ const hasPermission = (resource, permission) => next => async (_, args, req, inf
 
 const resolversComposition = {
 	'RootQuery.getUser': [isAuthenticated(), hasPermission('user', 'view')],
+	'RootQuery.getUsers': [isAuthenticated(), hasPermission('user', 'view')],
 	'RootMutation.createUser': [isAuthenticated(), hasPermission('user', 'create')],
 	'RootMutation.deleteUser': [isAuthenticated(), hasPermission('user', 'delete')],
 	'RootMutation.updateUser': [isAuthenticated(), hasPermission('user', 'update')],

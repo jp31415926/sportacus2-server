@@ -1,0 +1,23 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+	updateUser(_id: "6078f8e65cbe7512dd4f4d43", userInput:
+		{
+			username: "brainy2",
+			firstName: "Big Brainy",
+			lastName: "Smurf",
+			email: "brainy2@smurf.com",
+			password: "password2"
+		})
+	{
+		_id
+		username
+		firstName
+		lastName
+		email
+		createdAt
+		updatedAt
+	}
+}
