@@ -10,16 +10,6 @@ type AuthData {
   userId: String!
 }
 
-type RootMutation {
-  createUser(userInput: UserInput): User!
-  deleteUser(_id: ID!): Boolean!
-}
-
-type RootQuery {
-  login(emailOrUsername: String!, password: String!): AuthData!
-  getUser(_id: ID!): User!
-}
-
 type User {
   _id: ID!
   username: String!
@@ -35,6 +25,17 @@ input UserInput {
   firstName: String!
   lastName: String!
   email: String!
-  password: String!
+  password: String
 }
 
+
+type RootMutation {
+  createUser(userInput: UserInput!): User!
+  updateUser(_id: ID!, userInput: UserInput!): User!
+  deleteUser(_id: ID!): Boolean!
+}
+
+type RootQuery {
+  login(emailOrUsername: String!, password: String!): AuthData!
+  getUser(_id: ID!): User!
+}

@@ -1,6 +1,10 @@
-const ACL = require("acl2");
+const ACL = require('acl2');
 
-acl = new ACL(new ACL.mongodbBackend({ client: mongoClient }));
+
+function init(client) {
+	acl = new ACL.mongodbBackend({ client, useSingle: true });
+}
+
 
 // TODO: initialize some default permissions?
 

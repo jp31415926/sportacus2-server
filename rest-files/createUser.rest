@@ -5,15 +5,19 @@ X-Request-Type: GraphQL
 mutation {
 	createUser(userInput:
 		{
-			username: "brainy",
+			username: "brainy2",
 			firstName: "Brainy",
 			lastName: "Smurf",
-			email: "brainy@smurf.com",
+			email: "brainy2@smurf.com",
 			password: "password"
 		})
 	{
 		_id
 		username
+		firstName
+		lastName
 		email
+		createdAt
+		updatedAt
 	}
 }

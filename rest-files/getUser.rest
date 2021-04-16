@@ -5,6 +5,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc2N
 
 query {
   getUser(_id: "6077d94375f56107c24238f2") {
+		_id
 		username
 		firstName
 		lastName
