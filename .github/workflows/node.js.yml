@@ -22,7 +22,7 @@ jobs:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         # node-version: [10.x, 12.x, 14.x, 15.x]
-        node-version: [10.x, 12.x]
+        node-version: [10.x]
         # mongodb-version: [4.0, 4.2, 4.4]
         mongodb-version: [4.0]
 
@@ -36,7 +36,7 @@ jobs:
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         #path: ~/.npm
-        path: ~/.npm node_modules
+        path: node_modules
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
