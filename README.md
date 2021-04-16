@@ -1,3 +1,17 @@
+<p align="center">
+  <a href="https://github.com/jp31415926/sportacus2-server/actions" target="_blank">
+      <img src="https://github.com/jp31415926/sportacus2-server/actions/workflows/node.js.yml/badge.svg" alt="Tests" />
+  </a>
+  <img src="https://img.shields.io/github/release/jp31415926/sportacus2-server/all.svg" alt="Latest release" />
+
+  <a href="https://opensource.org/licenses/GPL-3.0" target="_blank">
+      <img src="https://img.shields.io/github/license/jp31415926/sportacus2-server" alt="GNU General Public License version 3" />
+  </a>
+    <a href="https://github.com/jp31415926/sportacus2-server/graphs/contributors" target="_blank">
+        <img src="https://img.shields.io/github/contributors/jp31415926/sportacus2-server?label=code+contributors" alt="Contributors" />
+    </a>
+</p>
+
 # Sportacus2 server
 NodeJS/Express/GraphQL API server for Sportacus version 2.
 
