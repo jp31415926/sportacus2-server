@@ -1,4 +1,3 @@
-console.log('Current directory: ' + process.cwd());
 const appConfig = require('../config');
 const { doesNotMatch } = require('assert');
 const { expect } = require('chai');
