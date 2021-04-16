@@ -26,6 +26,7 @@ function validateUserInput(userInput) {
 		errors.push({ message: 'Last name is required!' });
 	}
 	if (errors.length > 0) {
+		console.log(errors);
 		const error = new Error('Invalid input');
 		error.data = errors;
 		error.code = 422;
@@ -56,6 +57,7 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
+				console.log(errors);
 				const error = new Error('Invalid input');
 				error.data = errors;
 				error.code = 422;
@@ -214,7 +216,7 @@ const resolvers = {
 		getUser: async function (_, { _id }, req) {
 			const user = await User.findById(_id);
 			if (!user) {
-				const error = new Error('User not found.');
+				const error = new Error('User with ID ' + _id + ' not found.');
 				error.code = 401;
 				throw error;
 			}
@@ -265,7 +267,7 @@ const isAuthenticated = () => next => async (_, args, req, info) => {
 	// 	error.code = 401;
 	// 	throw error;
 	// }
-
+	req.userId = 123; // FAKE IT FOR NOW
 	return next(_, args, req, info);
 };
 
