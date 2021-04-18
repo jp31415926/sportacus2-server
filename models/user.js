@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const schema = new Schema({
@@ -19,7 +19,6 @@ const schema = new Schema({
 	email: {
 		type: String,
 		required: true,
-		// unique only optimizes access by assuming there is only one. It does not enforce uniqueness.
 		unique: true,
 		match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 	},
@@ -33,4 +32,4 @@ const schema = new Schema({
 
 //schema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
 
-module.exports = mongoose.model("User", schema);
+module.exports = mongoose.model('User', schema);

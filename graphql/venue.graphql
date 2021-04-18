@@ -1,0 +1,29 @@
+type Venue {
+	_id: ID!
+	name: String!
+	longName: String
+	streetAddress: String
+	latitude: String
+	longitude: String
+	url: String
+	poc: [String]
+	children: [String]
+	createdAt: String!
+	updatedAt: String!
+}
+
+type Venues {
+	items: [Venue!]!
+	total: Int!
+}
+
+input VenueInput {
+	name: String!
+	longName: String
+	streetAddress: String
+	latitude: String
+	longitude: String
+	url: String
+	poc: [String]
+	children: [String]
+}

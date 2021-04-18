@@ -1,0 +1,23 @@
+schema {
+	query: RootQuery
+	mutation: RootMutation
+}
+
+scalar DateTime
+
+type RootMutation {
+	createUser(userInput: UserInput!): User!
+	updateUser(_id: ID!, userInput: UserInput!): User!
+	deleteUser(_id: ID!): Boolean!
+	createVenue(venueInput: VenueInput!): Venue!
+	updateVenue(_id: ID!, venueInput: VenueInput!): Venue!
+	deleteVenue(_id: ID!): Boolean!
+}
+
+type RootQuery {
+	login(emailOrUsername: String!, password: String!): AuthData!
+	getUser(_id: ID!): User!
+	getUsers(perPage: Int! = 20, page: Int! = 1): Users!
+	getVenue(_id: ID!): Venue!
+	getVenues(perPage: Int! = 20, page: Int! = 1): Venues!
+}

@@ -1,10 +1,13 @@
 const appConfig = require('../config');
-const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const { composeResolvers } = require('@graphql-tools/resolvers-composition');
+
+const bcrypt = require('bcryptjs'); // user only
+const jwt = require('jsonwebtoken'); // user only
+
+const { composeResolvers } = require('@graphql-tools/resolvers-composition'); // common
 
 const User = require('../models/user');
+const Venue = require('../models/venue');
 
 
 function validateUserInput(userInput) {
@@ -34,13 +37,33 @@ function validateUserInput(userInput) {
 	}
 }
 
+function validateVenueInput(venueInput) {
+	const errors = [];
+	//console.log(venueInput);
+	if (venueInput.name &&
+		!validator.isLength(venueInput.name, { min: 2 })) {
+		errors.push({ message: 'Venue name too short!' });
+	}
+	if (venueInput.longName &&
+		!validator.isLength(venueInput.longName, { min: 5 })) {
+		errors.push({ message: 'Venue longName too short!' });
+	}
+	// TODO: check lat and long
+	// TODO: check streetAddress, poc, children
+	if (errors.length > 0) {
+		console.log(errors);
+		const error = new Error('Invalid input');
+		error.data = errors;
+		error.code = 422;
+		throw error;
+	}
+}
+
 const resolvers = {
 	RootMutation: {
+		/********************************* USER ****************************/
 		createUser: async (_, { userInput }, req) => {
 			validateUserInput(userInput);
-			// .catch(err => {
-			// 	throw err;
-			// });
 
 			const errors = [];
 
@@ -151,6 +174,7 @@ const resolvers = {
 					throw error;
 				})
 				.then(() => {
+					// TODO: should we return the database data? This requires that we do another query, possibly unnessarily
 					return User.findById(_id);
 				})
 				.then(user => {
@@ -164,7 +188,7 @@ const resolvers = {
 				});
 		},
 
-		deleteUser: async function (_, { _id }, req) {
+		deleteUser: async (_, { _id }, req) => {
 			return User.findByIdAndDelete(_id)
 				.catch(err => {
 					const error = new Error('Database error');
@@ -183,10 +207,135 @@ const resolvers = {
 				;
 		},
 
+
+		/********************************* VENUE ****************************/
+		createVenue: async (_, { venueInput }, req) => {
+			validateVenueInput(venueInput);
+
+			const errors = [];
+
+			if (errors.length === 0) {
+				const existingVenueName = await Venue.findOne({ name: venueInput.name });
+				if (existingVenueName) {
+					errors.push({ message: 'Venue name already used' });
+				}
+			}
+			if (errors.length > 0) {
+				console.log(errors);
+				const error = new Error('Invalid input');
+				error.data = errors;
+				error.code = 422;
+				throw error;
+			}
+			const venue = new Venue({
+				name: venueInput.name,
+				longName: venueInput.longName,
+				streetAddress: venueInput.streetAddress,
+				latitude: venueInput.latitude,
+				longitude: venueInput.longitude,
+				url: venueInput.url,
+				poc: venueInput.poc,
+				children: venueInput.children,
+			});
+
+			return venue.save()
+				.then(res => {
+					const result = {
+						...venue._doc,
+						_id: venue._id.toString(),
+						createdAt: venue.createdAt.toISOString(),
+						updatedAt: venue.updatedAt.toISOString(),
+					};
+					//console.log(result);
+					return result;
+				})
+				.catch(err => {
+					const error = new Error('Database error creating venue');
+					error.data = errors;
+					error.code = 422;
+					throw error;
+				});
+		},
+
+		updateVenue: async (_, { _id, venueInput }, req) => {
+			const errors = [];
+
+			var venueOld = await Venue.findById(_id);
+			if (!venueOld) {
+				errors.push({ message: 'Venue not found' });
+			} else {
+				validateVenueInput(venueInput);
+				//console.log(venueInput);
+
+				if (errors.length === 0) {
+					const existingVenueName = await Venue.findOne({ name: venueInput.name });
+					if (existingVenueName) {
+						errors.push({ message: 'Venue name already used' });
+					}
+				}
+			}
+			if (errors.length > 0) {
+				const error = new Error('Invalid input');
+				error.data = errors;
+				error.code = 422;
+				throw error;
+			}
+
+			// update old venue with new info
+			venueOld.name = venueInput.name;
+			venueOld.longName = venueInput.longName;
+			venueOld.streetAddress = venueInput.streetAddress;
+			venueOld.latitude = venueInput.latitude;
+			venueOld.longitude = venueInput.longitude;
+			venueOld.url = venueInput.url;
+			venueOld.poc = venueInput.poc;
+			venueOld.children = venueInput.children;
+
+			return venueOld.save()
+				.catch(err => {
+					const error = new Error('Database error updating venue');
+					error.data = errors;
+					error.code = 422;
+					throw error;
+				})
+				.then(() => {
+					// TODO: should we return the database data? This requires that we do another query, possibly unnessarily
+					return Venue.findById(_id);
+				})
+				.then(venue => {
+					const result = {
+						...venue._doc,
+						_id: venue._id.toString(),
+						createdAt: venue.createdAt.toISOString(),
+						updatedAt: venue.updatedAt.toISOString(),
+					};
+					return result;
+				});
+		},
+
+		deleteVenue: async (_, { _id }, req) => {
+			return Venue.findByIdAndDelete(_id)
+				.catch(err => {
+					const error = new Error('Database error');
+					error.code = 422;
+					throw error;
+				})
+				.then(res => {
+					if (res) {
+						return true;
+					} else {
+						const error = new Error('Venue not found');
+						error.code = 401;
+						throw error;
+					}
+				})
+				;
+		},
 	},
 
 	RootQuery: {
-		login: async function (_, { emailOrUsername, password }) {
+		/********************************* USER ****************************/
+		login: async (_, { emailOrUsername, password }) => {
 			let user = await User.findOne({ username: emailOrUsername });
 			if (!user) {
 				user = await User.findOne({ email: emailOrUsername });
@@ -213,26 +362,25 @@ const resolvers = {
 			return { token: token, userId: user._id.toString() };
 		},
 
-		getUser: async function (_, { _id }, req) {
+		getUser: async (_, { _id }, req) => {
 			const user = await User.findById(_id);
 			if (!user) {
-				const error = new Error('User with ID ' + _id + ' not found.');
+				const error = new Error('User not found.');
 				error.code = 401;
 				throw error;
 			}
 			return {
+				...user._doc,
 				_id: user._id.toString(),
-				username: user.username,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: user.email,
 				createdAt: user.createdAt.toISOString(),
 				updatedAt: user.updatedAt.toISOString(),
 			};
 		},
 
-		getUsers: async function (_, { perPage = 20, page = 1 }, req) {
+		getUsers: async (_, { perPage = 20, page = 1 }, req) => {
+			// TODO: does this need to be the number of total documents, or only the count that match the search???
 			const total = await User.countDocuments();
+			// TODO: add filtering to query
 			const items = await User.find()
 				.sort('createdAt')
 				.skip((page - 1) * perPage)
@@ -244,7 +392,50 @@ const resolvers = {
 			}
 
 			return {
-				users: items.map(i => {
+				items: items.map(i => {
+					return {
+						...i._doc,
+						_id: i._id.toString(),
+						createdAt: i.createdAt.toISOString(),
+						updatedAt: i.updatedAt.toISOString(),
+					}
+				}),
+				total: total,
+			};
+		},
+
+		/********************************* VENUE ****************************/
+		getVenue: async (_, { _id }, req) => {
+			const venue = await Venue.findById(_id);
+			if (!venue) {
+				const error = new Error('Venue not found.');
+				error.code = 401;
+				throw error;
+			}
+			return {
+				...venue._doc,
+				_id: venue._id.toString(),
+				createdAt: venue.createdAt.toISOString(),
+				updatedAt: venue.updatedAt.toISOString(),
+			};
+		},
+
+		getVenues: async (_, { perPage = 20, page = 1 }, req) => {
+			// TODO: does this need to be the number of total documents, or only the count that match the search???
+			const total = await Venue.countDocuments();
+			// TODO: add filtering to query
+			const items = await Venue.find()
+				.sort('createdAt')
+				.skip((page - 1) * perPage)
+				.limit(perPage);
+			if (!items) {
+				const error = new Error('No venues found that match criteria.');
+				error.code = 401;
+				throw error;
+			}
+
+			return {
+				items: items.map(i => {
 					return {
 						...i._doc,
 						_id: i._id.toString(),
@@ -256,7 +447,6 @@ const resolvers = {
 			};
 		},
 	},
-
 };
 
 const isAuthenticated = () => next => async (_, args, req, info) => {

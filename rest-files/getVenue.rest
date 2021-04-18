@@ -1,0 +1,19 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+query {
+  getVenue(_id: "607b9bbd5a910a04b6597c6e") {
+		_id
+		name
+		longName
+		streetAddress
+		latitude
+		longitude
+		url
+		poc
+		children
+		createdAt
+		updatedAt
+	}
+}

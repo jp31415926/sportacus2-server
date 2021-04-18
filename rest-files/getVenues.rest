@@ -3,16 +3,20 @@ Content-Type: application/json
 X-Request-Type: GraphQL
 
 query {
-  getUsers(perPage: 1, page: 1) {
+  getVenues {
     items {
 			_id
-			username
-			firstName
-			lastName
-			email
+			name
+			longName
+			streetAddress
+			latitude
+			longitude
+			url
+			poc
+			children
 			createdAt
 			updatedAt
-			}
+		}
     total
 	}
 }
