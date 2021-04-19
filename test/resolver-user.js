@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const fs = require('fs');
 const mongoose = require("mongoose");
 
-const graphqlResolver = require('../graphql/resolvers');
+const graphqlResolver = require('../graphql/resolvers/user');
 
 const User = require('../models/user');
 
