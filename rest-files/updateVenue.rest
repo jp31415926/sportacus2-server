@@ -1,0 +1,24 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+	updateVenue(_id: "607cd91c0af32205fa79ed5c", venueInput:
+		{
+			name: "Dublin Park"
+			longName: "Dublin Park"
+		}) 
+	{
+		_id
+		name
+		longName
+		streetAddress
+		latitude
+		longitude
+		url
+		poc
+		children
+		createdAt
+		updatedAt
+	}
+}

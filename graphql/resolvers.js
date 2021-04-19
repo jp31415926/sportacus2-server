@@ -269,7 +269,7 @@ const resolvers = {
 
 				if (errors.length === 0) {
 					const existingVenueName = await Venue.findOne({ name: venueInput.name });
-					if (existingVenueName) {
+					if (existingVenueName && existingVenueName._id.toString() !== _id) {
 						errors.push({ message: 'Venue name already used' });
 					}
 				}
