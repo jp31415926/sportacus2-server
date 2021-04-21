@@ -1,4 +1,3 @@
-//const appConfig = require('../config');
 const validator = require('validator');
 
 const Venue = require('../../models/venue');
@@ -39,7 +38,7 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				console.log(errors);
+				//console.log(errors);
 				const error = new Error('Invalid input');
 				error.data = errors;
 				error.code = 422;
