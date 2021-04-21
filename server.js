@@ -94,12 +94,21 @@ const hasPermission = (resource, permission) => next => async (_, args, req, inf
 	//	throw new Error('You are not authorized!');
 	//}
 
+	// here we want to check that the user has the permission for any of the levels of action:
+	// if permission = 'view', we will check for the following:
+	// does the role allow:
+	// view:any (user can view any of a particular resource)
+	// view:agegroup (user can view resources associated with a particular agegroup)
+	// view:region (user can view resources associated with a particular region)
+	// view:org (user can view resources associated with a particular org)
+	// this pattern continues for all actions (view,create,delete,update)
+
 	return next(_, args, req, info);
 };
 
 const resolversComposition = {
 	'RootQuery.getUser': [isAuthenticated(), hasPermission('user', 'view')],
-	'RootQuery.getUsers': [isAuthenticated(), hasPermission('user', 'view')],
+	'RootQuery.getUsers': [isAuthenticated(), hasPermission('user', 'list')],
 	'RootMutation.createUser': [isAuthenticated(), hasPermission('user', 'create')],
 	'RootMutation.deleteUser': [isAuthenticated(), hasPermission('user', 'delete')],
 	'RootMutation.updateUser': [isAuthenticated(), hasPermission('user', 'update')],
