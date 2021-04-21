@@ -1,10 +1,17 @@
+"""
+Authentication info from the server about the logged in user.
+"""
 type AuthData {
 	token: String!
 	userId: String!
 }
 
+"""
+A User received from the server. It will never have a password field.
+"""
 type User {
 	_id: ID!
+	"A unique username, 2 character minimum."
 	username: String!
 	firstName: String!
 	lastName: String!
@@ -13,11 +20,18 @@ type User {
 	updatedAt: String!
 }
 
+"""
+A list of Users received from the server and a total. The total is the
+total number of users in the system (this will probably change in the future).
+"""
 type Users {
 	items: [User!]!
 	total: Int!
 }
 
+"""
+The setable fields of a User sent to the server.
+"""
 input UserInput {
 	username: String!
 	firstName: String!
