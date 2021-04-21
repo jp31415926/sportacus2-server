@@ -1,0 +1,14 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+query {
+  getPOC(_id: "607f84f4a27d1522941c826a") {
+		_id
+		name
+		email
+		phone
+		createdAt
+		updatedAt
+	}
+}

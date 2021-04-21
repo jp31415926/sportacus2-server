@@ -2,12 +2,20 @@ type Venue {
 	_id: ID!
 	name: String!
 	longName: String
-	streetAddress: String
 	latitude: String
 	longitude: String
 	url: String
-	poc: [String]
-	children: [String]
+	poc: [POC]
+	street1: String
+	street2: String
+	city: String
+	state: String
+	zipcode: String
+	country: String
+	"Parent venue reference, if exist; not populated by default"
+	parent: ID
+	"Children venue reference(s), if exist; not populated by default"
+	children: [ID]
 	createdAt: String!
 	updatedAt: String!
 }
@@ -18,12 +26,23 @@ type Venues {
 }
 
 input VenueInput {
+	"Short name for venue"
 	name: String!
+	"Long name for venue"
 	longName: String
-	streetAddress: String
+	"Street address reference"
 	latitude: String
 	longitude: String
 	url: String
-	poc: [String]
-	children: [String]
+	poc: [ID]
+	street1: String
+	street2: String
+	city: String
+	state: String
+	zipcode: String
+	country: String
+	"Parent venue reference, if exist"
+	parent: ID
+	"Children venue reference(s), if exist"
+	children: [ID]
 }

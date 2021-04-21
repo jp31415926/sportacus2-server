@@ -1,0 +1,19 @@
+type POC {
+	_id: ID!
+	name: String!
+	email: [String]
+	phone: [String]
+	createdAt: String!
+	updatedAt: String!
+}
+
+type POCs {
+	items: [POC!]!
+	total: Int!
+}
+
+input POCInput {
+	name: String!
+	email: [String]
+	phone: [String]
+}

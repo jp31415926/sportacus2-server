@@ -7,17 +7,22 @@ mutation {
 		{
 			name: "Dublin Park"
 		}) 
-		{
-			_id
-			name
-			longName
-			streetAddress
-			latitude
-			longitude
-			url
-			poc
-			children
-			createdAt
-			updatedAt
+	{
+		_id
+		name
+		longName
+		latitude
+		longitude
+		url
+		poc
+		street1
+		street2
+		city
+		state
+		zipcode
+		country
+		children
+		createdAt
+		updatedAt
   }
 }

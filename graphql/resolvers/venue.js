@@ -14,7 +14,7 @@ function validateVenueInput(venueInput) {
 		errors.push({ message: 'Venue longName too short!' });
 	}
 	// TODO: check lat and long
-	// TODO: check streetAddress, poc, children
+	// TODO: check street address, poc, parent ref, children ref
 	if (errors.length > 0) {
 		console.log(errors);
 		const error = new Error('Invalid input');
@@ -47,11 +47,17 @@ const resolvers = {
 			const venue = new Venue({
 				name: venueInput.name,
 				longName: venueInput.longName,
-				streetAddress: venueInput.streetAddress,
+				street1: venueInput.street1,
+				street2: venueInput.street2,
+				city: venueInput.city,
+				state: venueInput.state,
+				zipcode: venueInput.zipcode,
+				country: venueInput.country,
 				latitude: venueInput.latitude,
 				longitude: venueInput.longitude,
 				url: venueInput.url,
 				poc: venueInput.poc,
+				parent: venueInput.parent,
 				children: venueInput.children,
 			});
 
@@ -101,11 +107,17 @@ const resolvers = {
 			// update old venue with new info
 			venueOld.name = venueInput.name;
 			venueOld.longName = venueInput.longName;
-			venueOld.streetAddress = venueInput.streetAddress;
+			venueOld.street1 = venueInput.street1;
+			venueOld.street2 = venueInput.street2;
+			venueOld.city = venueInput.city;
+			venueOld.state = venueInput.state;
+			venueOld.zipcode = venueInput.zipcode;
+			venueOld.country = venueInput.country;
 			venueOld.latitude = venueInput.latitude;
 			venueOld.longitude = venueInput.longitude;
 			venueOld.url = venueInput.url;
 			venueOld.poc = venueInput.poc;
+			venueOld.parent = venueInput.parent;
 			venueOld.children = venueInput.children;
 
 			return venueOld.save()
@@ -152,7 +164,8 @@ const resolvers = {
 
 	RootQuery: {
 		getVenue: async (_, { _id }, req) => {
-			const venue = await Venue.findById(_id);
+			const venue = await Venue.findById(_id)
+				.populate('poc');
 			if (!venue) {
 				const error = new Error('Venue not found.');
 				error.code = 401;
@@ -171,6 +184,7 @@ const resolvers = {
 			const total = await Venue.countDocuments();
 			// TODO: add filtering to query
 			const items = await Venue.find()
+				.populate('poc')
 				.sort('createdAt')
 				.skip((page - 1) * perPage)
 				.limit(perPage);

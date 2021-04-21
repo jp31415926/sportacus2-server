@@ -10,10 +10,6 @@ const schema = new Schema({
 	longName: {
 		type: String,
 	},
-	streetAddress: {
-		type: Schema.Types.ObjectId,
-		ref: 'StreetAddress',
-	},
 	latitude: {
 		type: Number,
 	},
@@ -27,6 +23,28 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'POC',
 	}],
+	street1: {
+		type: String,
+	},
+	street2: {
+		type: String,
+	},
+	city: {
+		type: String,
+	},
+	state: {
+		type: String,
+	},
+	zipcode: {
+		type: String,
+	},
+	country: {
+		type: String,
+	},
+	parent: {
+		type: Schema.Types.ObjectId,
+		ref: 'Venue',
+	},
 	children: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Venue',

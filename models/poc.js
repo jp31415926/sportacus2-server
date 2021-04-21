@@ -7,10 +7,10 @@ const schema = new Schema({
 		unique: true,
 		required: true,
 	},
-	phone: [{
+	email: [{
 		type: String,
 	}],
-	email: [{
+	phone: [{
 		type: String,
 	}],
 },

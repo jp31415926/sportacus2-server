@@ -3,15 +3,22 @@ Content-Type: application/json
 X-Request-Type: GraphQL
 
 query {
-  getVenue(_id: "607b9bbd5a910a04b6597c6e") {
+  getVenue(_id: "607cd91c0af32205fa79ed5c") {
 		_id
 		name
 		longName
-		streetAddress
 		latitude
 		longitude
 		url
-		poc
+		poc {
+      _id
+    }
+		street1
+		street2
+		city
+		state
+		zipcode
+		country
 		children
 		createdAt
 		updatedAt

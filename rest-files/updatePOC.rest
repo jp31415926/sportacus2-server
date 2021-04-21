@@ -1,0 +1,19 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+	updatePOC(_id: "607cd91c0af32205fa79ed5c", pocInput: 
+		{
+			name: "Joe Bob"
+			email: ["joe@bob.com"]
+		}) 
+	{
+		_id
+		name
+		email
+		phone
+		createdAt
+		updatedAt
+  }
+}

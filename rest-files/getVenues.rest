@@ -8,11 +8,21 @@ query {
 			_id
 			name
 			longName
-			streetAddress
 			latitude
 			longitude
 			url
-			poc
+			poc {
+				_id
+				name
+				email
+				phone
+			}
+			street1
+			street2
+			city
+			state
+			zipcode
+			country
 			children
 			createdAt
 			updatedAt

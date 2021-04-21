@@ -7,7 +7,7 @@
 	"main": "server.js",
 	"scripts": {
 		"test": "cp -n config-dist.js config.js; NODE_ENV=test mocha",
-		"start": "NODE_ENV=development nodemon server.js",
+		"start": "NODE_ENV=development nodemon -e js,graphql server.js",
 		"start-server": "NODE_ENV=production node server.js"
 	},
 	"eslintConfig": {

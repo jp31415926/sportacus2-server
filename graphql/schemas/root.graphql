@@ -12,6 +12,9 @@ type RootMutation {
 	createVenue(venueInput: VenueInput!): Venue!
 	updateVenue(_id: ID!, venueInput: VenueInput!): Venue!
 	deleteVenue(_id: ID!): Boolean!
+	createPOC(pocInput: POCInput!): POC!
+	updatePOC(_id: ID!, pocInput: POCInput!): POC!
+	deletePOC(_id: ID!): Boolean!
 }
 
 type RootQuery {
@@ -20,4 +23,6 @@ type RootQuery {
 	getUsers(perPage: Int! = 20, page: Int! = 1): Users!
 	getVenue(_id: ID!): Venue!
 	getVenues(perPage: Int! = 20, page: Int! = 1): Venues!
+	getPOC(_id: ID!): POC!
+	getPOCs(perPage: Int! = 20, page: Int! = 1): POCs!
 }
