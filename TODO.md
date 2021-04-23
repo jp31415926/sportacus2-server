@@ -14,20 +14,21 @@ Last updated April 2, 2021
 - Location conflicts (multiple games at same location and time)
 - Game conflicts (game time overlap)
 - Import/export games and teams
-- -make game export use search criteria
+- make game export use search criteria
 - separate login account (user) from volunteer roles (coach and official)
 - Calculate referee points as Sportacus 1
 - Checkbox in the official game report to flag that the referee admin needs to be alerted to this report.
 - Referee iCalendar support
-- Support various positions for each game (CR, AR1, AR2 or R1, R1 as well as mentor, standby, etc.)
+- Support various positions for each game (CR, AR1, AR2 or R1, R2 as well as mentor, standby, etc.)
 
 # Additional features
 - Phone app?
+- Show main user page that has volunteer positions and certifications, including what is missing
 - API backend design
 - Referee self-assignments as well as referee assignments by an admin (with accept/decline logic)
 - standardize user access and rights so scheduler users can edit their region games only
 - Support multiple organizations  (i.e. multiple independent areas, sections, etc.)
-- Better search function. Add region, age group, location filters to schedule search (have a simple search and an advanced search; perhaps name=value syntax)
+- Better search function. Add game number, region, age group, location filters to schedule search (have a simple search and an advanced search; perhaps name=value syntax)
 - “Follow” teams and get notified when games are created/changed
 - Credentialing (coach/ref levels) for tournament games
 - Automated scheduling based upon team/coach/field constraints
