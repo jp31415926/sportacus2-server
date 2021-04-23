@@ -5,7 +5,15 @@ X-Request-Type: GraphQL
 mutation {
 	createVenue(venueInput: 
 		{
-			name: "Dublin Park"
+			name: "Dublin 1"
+			longName: "Dublin Park 1"
+			latitude: "34.707771"
+			longitude: "-86.735505"
+			street1: "8324 Madison Pike"
+			city: "Madison"
+			state: "AL"
+			zipcode: "35758"
+			parent: "607cd91c0af32205fa79ed5c"
 		}) 
 	{
 		_id
@@ -14,7 +22,9 @@ mutation {
 		latitude
 		longitude
 		url
-		poc
+		poc {
+			name
+		 }
 		street1
 		street2
 		city

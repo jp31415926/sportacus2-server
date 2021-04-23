@@ -58,7 +58,6 @@ const resolvers = {
 				url: venueInput.url,
 				poc: venueInput.poc,
 				parent: venueInput.parent,
-				children: venueInput.children,
 			});
 
 			return venue.save()
@@ -118,7 +117,6 @@ const resolvers = {
 			venueOld.url = venueInput.url;
 			venueOld.poc = venueInput.poc;
 			venueOld.parent = venueInput.parent;
-			venueOld.children = venueInput.children;
 
 			return venueOld.save()
 				.catch(err => {

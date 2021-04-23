@@ -27,7 +27,7 @@ mutation {
 		state
 		zipcode
 		country
-		children
+		parent
 		createdAt
 		updatedAt
 	}

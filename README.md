@@ -95,3 +95,84 @@ OR error:
       "data": null
     }
 
+Example get a list of venues:
+
+    query {
+      getVenues {
+        items {
+          _id
+          name
+          longName
+          latitude
+          longitude
+          url
+          poc {
+            _id
+            name
+            email
+            phone
+          }
+          street1
+          street2
+          city
+          state
+          zipcode
+          country
+          parent
+          children
+          createdAt
+          updatedAt
+        }
+        total
+      }
+    }
+
+Example response:
+
+    {
+      "data": {
+        "getVenues": {
+          "items": [
+            {
+              "_id": "607cd91c0af32205fa79ed5c",
+              "name": "Dublin Park",
+              "longName": "Dublin Park",
+              "latitude": null,
+              "longitude": null,
+              "url": null,
+              "poc": [],
+              "street1": null,
+              "street2": null,
+              "city": null,
+              "state": null,
+              "zipcode": null,
+              "country": null,
+              "parent": null,
+              "children": [],
+              "createdAt": "2021-04-19T01:13:00.853Z",
+              "updatedAt": "2021-04-21T03:46:06.966Z"
+            },
+            {
+              "_id": "608322c009689146caf6d1cf",
+              "name": "Dublin 1",
+              "longName": "Dublin Park 1",
+              "latitude": "34.707771",
+              "longitude": "-86.735505",
+              "url": null,
+              "poc": [],
+              "street1": "8324 Madison Pike",
+              "street2": null,
+              "city": "Madison",
+              "state": "AL",
+              "zipcode": "35758",
+              "country": null,
+              "parent": "607cd91c0af32205fa79ed5c",
+              "children": [],
+              "createdAt": "2021-04-23T19:40:48.743Z",
+              "updatedAt": "2021-04-23T19:40:48.743Z"
+            }
+          ],
+          "total": 2
+        }
+      }
+    }

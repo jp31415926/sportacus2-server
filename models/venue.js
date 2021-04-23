@@ -45,10 +45,6 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Venue',
 	},
-	children: [{
-		type: Schema.Types.ObjectId,
-		ref: 'Venue',
-	}],
 	region: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Region',

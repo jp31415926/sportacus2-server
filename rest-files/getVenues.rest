@@ -4,6 +4,7 @@ X-Request-Type: GraphQL
 
 query {
   getVenues {
+    total
     items {
 			_id
 			name
@@ -23,10 +24,9 @@ query {
 			state
 			zipcode
 			country
-			children
+			parent
 			createdAt
 			updatedAt
 		}
-    total
 	}
 }
