@@ -30,6 +30,4 @@ const schema = new Schema({
 	{ timestamps: true }
 );
 
-//schema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
-
 module.exports = mongoose.model('User', schema);

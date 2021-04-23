@@ -49,10 +49,16 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Venue',
 	}],
+	region: [{
+		type: Schema.Types.ObjectId,
+		ref: 'Region',
+	}],
+	organization: [{
+		type: Schema.Types.ObjectId,
+		ref: 'Organization',
+	}],
 },
 	{ timestamps: true }
 );
-
-//schema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
 
 module.exports = mongoose.model('Venue', schema);

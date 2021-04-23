@@ -7,22 +7,25 @@ const schema = new Schema({
 		unique: true,
 		required: true,
 	},
-	title: {
+	longName: {
 		type: String,
 	},
-	email: [{
-		type: String,
-	}],
-	phone: [{
-		type: String,
-	}],
-	// optional user associated with this POC
-	user: {
+	coaches: [{
 		type: Schema.Types.ObjectId,
-		ref: 'User',
+		ref: 'POC',
+	}],
+	homeJerseyColor: {
+		type: String,
+	},
+	awayJerseyColor: {
+		type: String,
+	},
+	group: {
+		type: Schema.Types.ObjectId,
+		ref: 'Group',
 	},
 },
 	{ timestamps: true }
 );
 
-module.exports = mongoose.model('POC', schema);
+module.exports = mongoose.model('Team', schema);
