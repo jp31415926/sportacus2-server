@@ -41,17 +41,16 @@ const schema = new Schema({
 	country: {
 		type: String,
 	},
+	subField: {
+		type: Boolean,
+	},
 	parent: {
 		type: Schema.Types.ObjectId,
 		ref: 'Venue',
 	},
-	region: [{
+	group: [{
 		type: Schema.Types.ObjectId,
-		ref: 'Region',
-	}],
-	organization: [{
-		type: Schema.Types.ObjectId,
-		ref: 'Organization',
+		ref: 'Group',
 	}],
 },
 	{ timestamps: true }

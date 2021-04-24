@@ -14,13 +14,16 @@ mutation {
 		latitude
 		longitude
 		url
-		poc
+		poc {
+			name
+		}
 		street1
 		street2
 		city
 		state
 		zipcode
 		country
+		subField
 		parent
 		createdAt
 		updatedAt
