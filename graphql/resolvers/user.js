@@ -26,16 +26,24 @@ function validateUserInput(userInput) {
 	}
 	if (errors.length > 0) {
 		console.log(errors);
-		const error = new Error('Invalid input');
-		error.data = errors;
+		//const error = new Error('Invalid input');
+		const error = new Error(catErrors('Invalid input', errors));
+		//error.data = errors;
 		error.code = 422;
 		throw error;
 	}
 }
 
+function catErrors(error, errors) {
+	errors.forEach(e => {
+		error += '; ' + e.message;
+	});
+	return error
+}
+
 const resolvers = {
 	RootMutation: {
-		createUser: async (_, { userInput }, req) => {
+		createUser: async (_, { userInput }) => {
 			validateUserInput(userInput);
 
 			const errors = [];
@@ -54,8 +62,8 @@ const resolvers = {
 			}
 			if (errors.length > 0) {
 				console.log(errors);
-				const error = new Error('Invalid input');
-				error.data = errors;
+				const error = new Error(catErrors('Invalid input', errors));
+				//error.data = errors;
 				error.code = 422;
 				throw error;
 			}
@@ -69,7 +77,7 @@ const resolvers = {
 			});
 
 			return user.save()
-				.then(res => {
+				.then(() => {
 					const result = {
 						...user._doc,
 						_id: user._id.toString(),
@@ -80,14 +88,16 @@ const resolvers = {
 					return result;
 				})
 				.catch(err => {
-					const error = new Error('Database error creating user');
-					error.data = errors;
+					errors.push({ message: err.toString() });
+					//const error = new Error('Database error creating user');
+					const error = new Error(catErrors('Database error creating user', errors));
+					//error.data = errors;
 					error.code = 422;
 					throw error;
 				});
 		},
 
-		updateUser: async (_, { _id, userInput }, req) => {
+		updateUser: async (_, { _id, userInput }) => {
 			const errors = [];
 			var hashPassword = false;
 
@@ -120,8 +130,9 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				const error = new Error('Invalid input');
-				error.data = errors;
+				//const error = new Error('Invalid input');
+				const error = new Error(catErrors('Invalid input', errors));
+				//error.data = errors;
 				error.code = 422;
 				throw error;
 			}
@@ -141,8 +152,10 @@ const resolvers = {
 
 			return userOld.save()
 				.catch(err => {
-					const error = new Error('Database error updating user');
-					error.data = errors;
+					errors.push({ message: err.toString() });
+					//const error = new Error('Database error creating user');
+					const error = new Error(catErrors('Database error creating user', errors));
+					//error.data = errors;
 					error.code = 422;
 					throw error;
 				})
@@ -161,10 +174,12 @@ const resolvers = {
 				});
 		},
 
-		deleteUser: async (_, { _id }, req) => {
+		deleteUser: async (_, { _id }) => {
+			const errors = [];
 			return User.findByIdAndDelete(_id)
 				.catch(err => {
-					const error = new Error('Database error');
+					errors.push({ message: err.toString() });
+					const error = new Error(catErrors('Database error', errors));
 					error.code = 422;
 					throw error;
 				})
@@ -209,7 +224,7 @@ const resolvers = {
 			return { token: token, userId: user._id.toString() };
 		},
 
-		getUser: async (_, { _id }, req) => {
+		getUser: async (_, { _id }) => {
 			const user = await User.findById(_id);
 			if (!user) {
 				const error = new Error('User not found.');
@@ -224,7 +239,7 @@ const resolvers = {
 			};
 		},
 
-		getUsers: async (_, { perPage = 20, page = 1 }, req) => {
+		getUsers: async (_, { perPage = 20, page = 1 }) => {
 			// TODO: does this need to be the number of total documents, or only the count that match the search???
 			const total = await User.countDocuments();
 			// TODO: add filtering to query
