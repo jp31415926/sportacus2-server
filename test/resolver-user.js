@@ -42,7 +42,7 @@ describe('User functions', () => {
 			lastName: testUserInfo.lastName,
 		};
 
-		var result = await graphqlResolver.RootMutation.createUser(_, { userInput }, req);
+		var result = await graphqlResolver.Mutation.createUser(_, { userInput }, req);
 		const testUserId = result._id.toString();
 
 		// Don't assume that what is returned is what was stored in the database
@@ -72,8 +72,7 @@ describe('User functions', () => {
 			firstName: testUserInfo.firstName,
 			lastName: testUserInfo.lastName,
 		};
-		const user = new User(userInput);
-		await user.save();
+		const user = await User.create(userInput);
 		const testUserId = user._id.toString();
 
 		userInput.email = 'updateUser2_' + testUserInfo.email;
@@ -82,7 +81,7 @@ describe('User functions', () => {
 		userInput.firstName = testUserInfo.firstName + '2';
 		userInput.lastName = testUserInfo.lastName + '2';
 
-		var result = await graphqlResolver.RootMutation.updateUser(_, { _id: testUserId, userInput }, req);
+		var result = await graphqlResolver.Mutation.updateUser(_, { _id: testUserId, userInput }, req);
 
 		expect(result).not.to.be.null;
 		expect(result._id.toString()).to.equal(testUserId);
@@ -100,19 +99,17 @@ describe('User functions', () => {
 
 	it('getUser should get a user by id', async () => {
 		// create the test user
-		const user = new User({
+		const user = await User.create({
 			email: 'getUser_' + testUserInfo.email,
 			username: 'getUser_' + testUserInfo.username,
 			password: testUserInfo.password,
 			firstName: testUserInfo.firstName,
 			lastName: testUserInfo.lastName,
 		});
-		await user.save();
-		const dbuser = await User.findOne({ email: 'getUser_' + testUserInfo.email });
-		const testUserId = dbuser._id.toString();
+		const testUserId = user._id.toString();
 
 		var _, req = {};
-		var result = await graphqlResolver.RootQuery.getUser(_, { _id: testUserId }, req);
+		var result = await graphqlResolver.Query.getUser(_, { _id: testUserId }, req);
 		// cleanup
 		await User.deleteOne({ _id: testUserId });
 
@@ -124,18 +121,17 @@ describe('User functions', () => {
 
 	it('deleteUser should delete a user by id', async () => {
 		// create the test user
-		const user = new User({
+		const user = await User.create({
 			email: 'deleteUser_' + testUserInfo.email,
 			username: 'deleteUser_' + testUserInfo.username,
 			password: testUserInfo.password,
 			firstName: testUserInfo.firstName,
 			lastName: testUserInfo.lastName,
 		});
-		await user.save();
 		const testUserId = user._id.toString();
 
 		var _, req = {};
-		var result = await graphqlResolver.RootMutation.deleteUser(_, { _id: testUserId }, req);
+		var result = await graphqlResolver.Mutation.deleteUser(_, { _id: testUserId }, req);
 		result = await User.findById(testUserId);
 		expect(result).to.be.null;
 		result = await User.findOne({ email: 'deleteUser_' + testUserInfo.email });

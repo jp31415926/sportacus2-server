@@ -42,7 +42,7 @@ function catErrors(error, errors) {
 }
 
 const resolvers = {
-	RootMutation: {
+	Mutation: {
 		createUser: async (_, { userInput }) => {
 			validateUserInput(userInput);
 
@@ -152,9 +152,7 @@ const resolvers = {
 
 			return userOld.save()
 				.catch(err => {
-					errors.push({ message: err.toString() });
-					//const error = new Error('Database error creating user');
-					const error = new Error(catErrors('Database error creating user', errors));
+					const error = new Error(catErrors('Database error creating user; ' + err.toString(), errors));
 					//error.data = errors;
 					error.code = 422;
 					throw error;
@@ -164,13 +162,12 @@ const resolvers = {
 					return User.findById(_id);
 				})
 				.then(user => {
-					const result = {
+					return {
 						...user._doc,
 						_id: user._id.toString(),
 						createdAt: user.createdAt.toISOString(),
 						updatedAt: user.updatedAt.toISOString(),
 					};
-					return result;
 				});
 		},
 
@@ -178,8 +175,7 @@ const resolvers = {
 			const errors = [];
 			return User.findByIdAndDelete(_id)
 				.catch(err => {
-					errors.push({ message: err.toString() });
-					const error = new Error(catErrors('Database error', errors));
+					const error = new Error(catErrors('Database error deleting user; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -196,7 +192,7 @@ const resolvers = {
 		},
 	},
 
-	RootQuery: {
+	Query: {
 		login: async (_, { emailOrUsername, password }) => {
 			let user = await User.findOne({ username: emailOrUsername });
 			if (!user) {
@@ -248,7 +244,7 @@ const resolvers = {
 				.skip((page - 1) * perPage)
 				.limit(perPage);
 			if (!items) {
-				const error = new Error('No users found that match criteria.');
+				const error = new Error('No items that match criteria.');
 				error.code = 401;
 				throw error;
 			}

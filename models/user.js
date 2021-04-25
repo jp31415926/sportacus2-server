@@ -26,6 +26,16 @@ const schema = new Schema({
 		type: String,
 		required: true
 	},
+	roles: [{
+		type: Schema.Types.ObjectId,
+		ref: 'Role',
+	}],
+	lastSuccessfulLogin: {
+		type: Date,
+	},
+	lastUnsuccessfulLogin: {
+		type: Date,
+	},
 },
 	{ timestamps: true }
 );

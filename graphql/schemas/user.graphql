@@ -3,7 +3,7 @@ Authentication info from the server about the logged in user.
 """
 type AuthData {
 	token: String!
-	userId: String!
+	userId: String
 }
 
 """
@@ -11,11 +11,12 @@ A User received from the server. It will never have a password field.
 """
 type User {
 	_id: ID!
-	"A unique username, 2 character minimum."
 	username: String!
 	firstName: String!
 	lastName: String!
 	email: String!
+	lastSuccessfulLogin: String!
+	lastUnsuccessfulLogin: String!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -30,12 +31,17 @@ type Users {
 }
 
 """
-The setable fields of a User sent to the server.
+The setable/updatable fields of a User sent to the server.
 """
 input UserInput {
+	"A unique username, 2 character minimum (required)"
 	username: String!
+	"User's first name (required)"
 	firstName: String!
+	"User's last name (required)"
 	lastName: String!
+	"A unique email address, 5 character minimum (required)"
 	email: String!
+	"User's password (plaintext). Leave empty on update to make no change."
 	password: String
 }

@@ -2,27 +2,18 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const schema = new Schema({
+	// name of function (i.e. CR, AR1, Snacks)
 	name: {
 		type: String,
 		required: true,
 	},
-	longName: {
+	type: {
 		type: String,
 		required: true,
 	},
-	startDate: {
-		type: Date,
-		required: true,
-	},
-	endDate: {
-		type: Date,
-		required: true,
-	},
-	archived: {
-		type: Boolean,
-	},
+
 },
 	{ timestamps: true }
 );
 
-module.exports = mongoose.model('Project', schema);
+module.exports = mongoose.model('Function', schema);

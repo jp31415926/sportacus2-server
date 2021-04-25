@@ -9,10 +9,6 @@ const schema = new Schema({
 		unique: true,
 		required: true,
 	},
-	project: {
-		type: Schema.Types.ObjectId,
-		ref: 'Project',
-	},
 	// used for searching. example: agegroup, region, area, section, etc.
 	searchKey: {
 		type: String,
@@ -29,6 +25,12 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'POC',
 	}],
+	project: {
+		type: Schema.Types.ObjectId,
+		ref: 'Project',
+		required: true,
+
+	},
 	// points to a hierarchical parent group
 	parentGroup: {
 		type: Schema.Types.ObjectId,

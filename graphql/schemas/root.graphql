@@ -1,11 +1,11 @@
 schema {
-	query: RootQuery
-	mutation: RootMutation
+	query: Query
+	mutation: Mutation
 }
 
 scalar DateTime
 
-type RootMutation {
+type Mutation {
 	createUser(userInput: UserInput!): User!
 	updateUser(_id: ID!, userInput: UserInput!): User!
 	deleteUser(_id: ID!): Boolean!
@@ -17,7 +17,7 @@ type RootMutation {
 	deletePOC(_id: ID!): Boolean!
 }
 
-type RootQuery {
+type Query {
 	login(emailOrUsername: String!, password: String!): AuthData!
 	getUser(_id: ID!): User!
 	getUsers(perPage: Int! = 20, page: Int! = 1): Users!

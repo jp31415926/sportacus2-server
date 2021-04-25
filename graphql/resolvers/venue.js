@@ -25,8 +25,8 @@ function validateVenueInput(venueInput) {
 }
 
 const resolvers = {
-	RootMutation: {
-		createVenue: async (_, { venueInput }, req) => {
+	Mutation: {
+		createVenue: async (_, { venueInput }) => {
 			validateVenueInput(venueInput);
 
 			const errors = [];
@@ -61,7 +61,7 @@ const resolvers = {
 			});
 
 			return venue.save()
-				.then(res => {
+				.then(() => {
 					const result = {
 						...venue._doc,
 						_id: venue._id.toString(),
@@ -72,14 +72,14 @@ const resolvers = {
 					return result;
 				})
 				.catch(err => {
-					const error = new Error('Database error creating venue');
+					const error = new Error('Database error creating venue:' + err.toString());
 					error.data = errors;
 					error.code = 422;
 					throw error;
 				});
 		},
 
-		updateVenue: async (_, { _id, venueInput }, req) => {
+		updateVenue: async (_, { _id, venueInput }) => {
 			const errors = [];
 
 			var venueOld = await Venue.findById(_id);
@@ -140,7 +140,7 @@ const resolvers = {
 				});
 		},
 
-		deleteVenue: async (_, { _id }, req) => {
+		deleteVenue: async (_, { _id }) => {
 			return Venue.findByIdAndDelete(_id)
 				.catch(err => {
 					const error = new Error('Database error');
@@ -160,8 +160,8 @@ const resolvers = {
 		},
 	},
 
-	RootQuery: {
-		getVenue: async (_, { _id }, req) => {
+	Query: {
+		getVenue: async (_, { _id }) => {
 			const venue = await Venue.findById(_id)
 				.populate('poc');
 			if (!venue) {
@@ -177,7 +177,7 @@ const resolvers = {
 			};
 		},
 
-		getVenues: async (_, { perPage = 20, page = 1 }, req) => {
+		getVenues: async (_, { perPage = 20, page = 1 }) => {
 			// TODO: does this need to be the number of total documents, or only the count that match the search???
 			const total = await Venue.countDocuments();
 			// TODO: add filtering to query

@@ -20,7 +20,7 @@ function validatePOCInput(pocInput) {
 }
 
 const resolvers = {
-	RootMutation: {
+	Mutation: {
 		createPOC: async (_, { pocInput }, req) => {
 			validatePOCInput(pocInput);
 
@@ -135,7 +135,7 @@ const resolvers = {
 		},
 	},
 
-	RootQuery: {
+	Query: {
 		getPOC: async (_, { _id }, req) => {
 			const poc = await POC.findById(_id);
 			if (!poc) {

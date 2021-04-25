@@ -7,17 +7,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
-//const graphqlTools = require('graphql-tools');
-const { makeExecutableSchema } = require('@graphql-tools/schema');
-const { mergeResolvers } = require('@graphql-tools/merge');
-//const { addResolversToSchema } = require('@graphql-tools/schema');
-const { loadFilesSync } = require('@graphql-tools/load-files');
-const { composeResolvers } = require('@graphql-tools/resolvers-composition');
+const schemaWithResolvers = require('./graphql/schemas_resolvers');
 
-//const graphqlSchema = require('./graphql/schema');
-//const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/check-auth');
-//FIXME: const acl = require('./middleware/acl');
 
 const app = express();
 
@@ -46,7 +38,7 @@ const fileFilter = (req, file, cb) => {
 	}
 };
 
-
+// TODO: Is this correct? GraphQL requests are not legal JSON; only the replies.
 //app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -75,55 +67,6 @@ app.use((req, res, next) => {
 
 app.use(auth);
 
-const isAuthenticated = () => next => async (_, args, req, info) => {
-	// check if the current user is authenticated
-	// commented out for testing
-	// if (!req.isAuth) {
-	// 	const error = new Error('Not authenticated!');
-	// 	error.code = 401;
-	// 	throw error;
-	// }
-	req.userId = 123; // FAKE IT FOR NOW
-	return next(_, args, req, info);
-};
-
-const hasPermission = (resource, permission) => next => async (_, args, req, info) => {
-	// check if current user has the provided role
-	console.log('check if user ' + req.userId + ' has ' + permission + ' permission for ' + resource + ' resource')
-	//if (!context.currentUser.roles || context.currentUser.roles.includes(role)) {
-	//	throw new Error('You are not authorized!');
-	//}
-
-	// here we want to check that the user has the permission for any of the levels of action:
-	// if permission = 'view', we will check for the following:
-	// does the role allow:
-	// view:any (user can view any of a particular resource)
-	// view:agegroup (user can view resources associated with a particular agegroup)
-	// view:region (user can view resources associated with a particular region)
-	// view:org (user can view resources associated with a particular org)
-	// this pattern continues for all actions (view,create,delete,update)
-
-	return next(_, args, req, info);
-};
-
-const resolversComposition = {
-	'RootQuery.getUser': [isAuthenticated(), hasPermission('user', 'view')],
-	'RootQuery.getUsers': [isAuthenticated(), hasPermission('user', 'list')],
-	'RootMutation.createUser': [isAuthenticated(), hasPermission('user', 'create')],
-	'RootMutation.deleteUser': [isAuthenticated(), hasPermission('user', 'delete')],
-	'RootMutation.updateUser': [isAuthenticated(), hasPermission('user', 'update')],
-};
-
-const graphqlSchemas = loadFilesSync(path.join(__dirname, 'graphql', 'schemas', '*.graphql'));
-
-const resolversArray = loadFilesSync(path.join(__dirname, 'graphql', 'resolvers', '*.js'));
-const mergedResolvers = mergeResolvers(resolversArray);
-const graphqlResolvers = composeResolvers(mergedResolvers, resolversComposition);
-
-const schemaWithResolvers = makeExecutableSchema({
-	typeDefs: graphqlSchemas,
-	resolvers: graphqlResolvers,
-})
 
 app.use(
 	'/graphql', graphqlHTTP({
@@ -144,9 +87,6 @@ app.use(
 );
 
 
-
-
-
 // default route - 404 error
 app.use((req, res, next) => {
 	const error = new Error("Not found.");
@@ -155,7 +95,7 @@ app.use((req, res, next) => {
 });
 
 // Error route (when we throw errors it comes here)
-app.use((error, req, res, next) => {
+app.use((error, req, res /*, next*/) => {
 	res.status(error.status || 500);
 	res.json({
 		error: {
@@ -168,16 +108,21 @@ app.use((error, req, res, next) => {
 console.log('Connecting to DB');
 //mongoose.connect('mongodb://' + appConfig.db.user + ':' + appConfig.db.pass + '@' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
 mongoose.connect('mongodb://' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
-	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-	.then(result => {
-		console.log('Starting mongodbBackend');
-		acl = new require('acl2').mongodbBackend({ db: mongoose.connection.db, useSingle: true });
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		poolSize: 5, // increase pool size which allows more syncronous connections, and thus operations
+	})
+	.then(() => {
+		//console.log('Starting mongodbBackend');
+		//acl = new require('acl2').mongodbBackend({ db: mongoose.connection.db, useSingle: true });
 
 		console.log('Listening on port ' + appConfig.app.port);
 		app.listen(appConfig.app.port);
 	})
 	.catch(err => {
 		console.log(err);
-		console.log('landed in bottom catch block')
+		console.log('ERROR! landed in bottom catch block :(')
 	});
 
