@@ -5,6 +5,10 @@ const { loadFilesSync } = require('@graphql-tools/load-files');
 const { composeResolvers } = require('@graphql-tools/resolvers-composition');
 const path = require('path');
 
+//const { GraphQLDate } = require('graphql-scalars');
+const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
+const { mergeTypeDefs } = require('@graphql-tools/merge');
+
 //const { modifyObjectFields } = require("@graphql-tools/utils");
 
 // TODO: Put this into a separate module?
@@ -55,7 +59,7 @@ const mergedResolvers = mergeResolvers(resolversArray);
 const graphqlResolvers = composeResolvers(mergedResolvers, resolversComposition);
 
 const schemaWithResolvers = makeExecutableSchema({
-	typeDefs: graphqlSchemas,
+	typeDefs: mergeTypeDefs([...scalarTypeDefs, ...graphqlSchemas]),
 	resolvers: graphqlResolvers,
 })
 

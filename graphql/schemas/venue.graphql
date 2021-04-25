@@ -4,7 +4,7 @@ type Venue {
 	longName: String
 	latitude: String
 	longitude: String
-	url: String
+	url: URL
 	poc: [POC]
 	street1: String
 	street2: String
@@ -12,18 +12,17 @@ type Venue {
 	state: String
 	zipcode: String
 	country: String
-	"Is this a smaller field located on the parent field?"
+	"Indicates if this is a smaller field located on the parent field"
 	subField: Boolean
-	"Parent venue reference, if exist; not populated by default"
-	parent: ID
-	"Children venue reference(s), if exist; not populated by default"
-	createdAt: String!
-	updatedAt: String!
+	"Parent venue reference, if exists; not populated by default"
+	parent: Venue
+	createdAt: DateTime!
+	updatedAt: DateTime!
 }
 
 type Venues {
 	items: [Venue!]!
-	total: Int!
+	total: UnsignedInt!
 }
 
 input VenueInput {
@@ -34,7 +33,7 @@ input VenueInput {
 	"Street address reference"
 	latitude: String
 	longitude: String
-	url: String
+	url: URL
 	poc: [ID]
 	street1: String
 	street2: String
@@ -44,6 +43,6 @@ input VenueInput {
 	country: String
 	"Is this a smaller field located on the parent field?"
 	subField: Boolean
-	"Parent venue reference, if exist"
+	"Parent venue reference, if exists"
 	parent: ID
 }

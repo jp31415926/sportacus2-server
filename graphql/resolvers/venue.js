@@ -64,9 +64,6 @@ const resolvers = {
 				.then(() => {
 					const result = {
 						...venue._doc,
-						_id: venue._id.toString(),
-						createdAt: venue.createdAt.toISOString(),
-						updatedAt: venue.updatedAt.toISOString(),
 					};
 					//console.log(result);
 					return result;
@@ -132,9 +129,6 @@ const resolvers = {
 				.then(venue => {
 					const result = {
 						...venue._doc,
-						_id: venue._id.toString(),
-						createdAt: venue.createdAt.toISOString(),
-						updatedAt: venue.updatedAt.toISOString(),
 					};
 					return result;
 				});
@@ -171,9 +165,6 @@ const resolvers = {
 			}
 			return {
 				...venue._doc,
-				_id: venue._id.toString(),
-				createdAt: venue.createdAt.toISOString(),
-				updatedAt: venue.updatedAt.toISOString(),
 			};
 		},
 
@@ -196,9 +187,6 @@ const resolvers = {
 				items: items.map(i => {
 					return {
 						...i._doc,
-						_id: i._id.toString(),
-						createdAt: i.createdAt.toISOString(),
-						updatedAt: i.updatedAt.toISOString(),
 					}
 				}),
 				total: total,

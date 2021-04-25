@@ -80,9 +80,7 @@ const resolvers = {
 				.then(() => {
 					const result = {
 						...user._doc,
-						_id: user._id.toString(),
-						createdAt: user.createdAt.toISOString(),
-						updatedAt: user.updatedAt.toISOString(),
+						//_id: user._id.toString(),
 					};
 					//console.log(result);
 					return result;
@@ -164,9 +162,6 @@ const resolvers = {
 				.then(user => {
 					return {
 						...user._doc,
-						_id: user._id.toString(),
-						createdAt: user.createdAt.toISOString(),
-						updatedAt: user.updatedAt.toISOString(),
 					};
 				});
 		},
@@ -205,6 +200,8 @@ const resolvers = {
 			}
 			const isEqual = await bcrypt.compare(password, user.password);
 			if (!isEqual) {
+				user.lastUnsuccessfulLogin = Date();
+				await user.save();
 				const error = new Error('Password is incorrect.');
 				error.code = 401;
 				throw error;
@@ -217,7 +214,9 @@ const resolvers = {
 				appConfig.app.secret,
 				{ expiresIn: '1h' }
 			);
-			return { token: token, userId: user._id.toString() };
+			user.lastSuccessfulLogin = Date();
+			await user.save();
+			return { token: token, userId: user._id/*.toString()*/ };
 		},
 
 		getUser: async (_, { _id }) => {
@@ -229,9 +228,6 @@ const resolvers = {
 			}
 			return {
 				...user._doc,
-				_id: user._id.toString(),
-				createdAt: user.createdAt.toISOString(),
-				updatedAt: user.updatedAt.toISOString(),
 			};
 		},
 
@@ -253,9 +249,6 @@ const resolvers = {
 				items: items.map(i => {
 					return {
 						...i._doc,
-						_id: i._id.toString(),
-						createdAt: i.createdAt.toISOString(),
-						updatedAt: i.updatedAt.toISOString(),
 					}
 				}),
 				total: total,

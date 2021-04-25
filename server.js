@@ -71,8 +71,6 @@ app.use(auth);
 app.use(
 	'/graphql', graphqlHTTP({
 		schema: schemaWithResolvers,
-		//schema: graphqlSchema,
-		//rootValue: graphqlResolver,
 		graphiql: appConfig.env === 'development', // only enable graphiql in development environment
 		formatError(err) {
 			if (!err.originalError) {
@@ -89,13 +87,14 @@ app.use(
 
 // default route - 404 error
 app.use((req, res, next) => {
-	const error = new Error("Not found.");
+	const error = new Error('Not found: ' + req.url);
 	error.status = 404;
 	next(error);
 });
 
 // Error route (when we throw errors it comes here)
-app.use((error, req, res /*, next*/) => {
+// eslint-disable-next-line no-unused-vars
+app.use((error, req, res , next) => {
 	res.status(error.status || 500);
 	res.json({
 		error: {

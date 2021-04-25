@@ -1,19 +1,19 @@
 type POC {
 	_id: ID!
 	name: String!
-	email: [String]
-	phone: [String]
-	createdAt: String!
-	updatedAt: String!
+	email: [EmailAddress]
+	phone: [PhoneNumber]
+	createdAt: DateTime!
+	updatedAt: DateTime!
 }
 
 type POCs {
 	items: [POC!]!
-	total: Int!
+	total: UnsignedInt!
 }
 
 input POCInput {
 	name: String!
-	email: [String]
-	phone: [String]
+	email: [EmailAddress]
+	phone: [PhoneNumber]
 }

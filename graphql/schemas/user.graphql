@@ -3,7 +3,7 @@ Authentication info from the server about the logged in user.
 """
 type AuthData {
 	token: String!
-	userId: String
+	userId: ID!
 }
 
 """
@@ -14,11 +14,11 @@ type User {
 	username: String!
 	firstName: String!
 	lastName: String!
-	email: String!
-	lastSuccessfulLogin: String!
-	lastUnsuccessfulLogin: String!
-	createdAt: String!
-	updatedAt: String!
+	email: EmailAddress!
+	lastSuccessfulLogin: DateTime!
+	lastUnsuccessfulLogin: DateTime!
+	createdAt: DateTime!
+	updatedAt: DateTime!
 }
 
 """
@@ -27,7 +27,7 @@ total number of users in the system (this will probably change in the future).
 """
 type Users {
 	items: [User!]!
-	total: Int!
+	total: UnsignedInt!
 }
 
 """
@@ -41,7 +41,7 @@ input UserInput {
 	"User's last name (required)"
 	lastName: String!
 	"A unique email address, 5 character minimum (required)"
-	email: String!
+	email: EmailAddress!
 	"User's password (plaintext). Leave empty on update to make no change."
 	password: String
 }

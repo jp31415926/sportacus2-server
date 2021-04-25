@@ -17,6 +17,8 @@ mutation {
 		firstName
 		lastName
 		email
+		lastSuccessfulLogin
+		lastUnsuccessfulLogin
 		createdAt
 		updatedAt
 	}

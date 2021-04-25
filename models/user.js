@@ -6,7 +6,7 @@ const schema = new Schema({
 		type: String,
 		unique: true,
 		required: true,
-		match: /[a-zA-Z0-9_]+/
+		match: /[a-zA-Z_][a-zA-Z0-9_]+/
 	},
 	firstName: {
 		type: String,
@@ -32,9 +32,11 @@ const schema = new Schema({
 	}],
 	lastSuccessfulLogin: {
 		type: Date,
+		default: new Date(0),
 	},
 	lastUnsuccessfulLogin: {
 		type: Date,
+		default: new Date(0),
 	},
 },
 	{ timestamps: true }

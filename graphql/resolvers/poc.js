@@ -21,7 +21,7 @@ function validatePOCInput(pocInput) {
 
 const resolvers = {
 	Mutation: {
-		createPOC: async (_, { pocInput }, req) => {
+		createPOC: async (_, { pocInput }) => {
 			validatePOCInput(pocInput);
 
 			const errors = [];
@@ -46,12 +46,9 @@ const resolvers = {
 			});
 
 			return poc.save()
-				.then(res => {
+				.then(() => {
 					const result = {
 						...poc._doc,
-						_id: poc._id.toString(),
-						createdAt: poc.createdAt.toISOString(),
-						updatedAt: poc.updatedAt.toISOString(),
 					};
 					//console.log(result);
 					return result;
@@ -64,7 +61,7 @@ const resolvers = {
 				});
 		},
 
-		updatePOC: async (_, { _id, pocInput }, req) => {
+		updatePOC: async (_, { _id, pocInput }) => {
 			const errors = [];
 
 			var pocOld = await POC.findById(_id);
@@ -94,7 +91,7 @@ const resolvers = {
 			pocOld.phone = pocInput.phone;
 
 			return pocOld.save()
-				.catch(err => {
+				.catch(() => {
 					const error = new Error('Database error updating POC');
 					error.data = errors;
 					error.code = 422;
@@ -107,15 +104,12 @@ const resolvers = {
 				.then(poc => {
 					const result = {
 						...poc._doc,
-						_id: poc._id.toString(),
-						createdAt: poc.createdAt.toISOString(),
-						updatedAt: poc.updatedAt.toISOString(),
 					};
 					return result;
 				});
 		},
 
-		deletePOC: async (_, { _id }, req) => {
+		deletePOC: async (_, { _id }) => {
 			return POC.findByIdAndDelete(_id)
 				.catch(err => {
 					const error = new Error('Database error');
@@ -136,7 +130,7 @@ const resolvers = {
 	},
 
 	Query: {
-		getPOC: async (_, { _id }, req) => {
+		getPOC: async (_, { _id }) => {
 			const poc = await POC.findById(_id);
 			if (!poc) {
 				const error = new Error('POC not found.');
@@ -145,13 +139,10 @@ const resolvers = {
 			}
 			return {
 				...poc._doc,
-				_id: poc._id.toString(),
-				createdAt: poc.createdAt.toISOString(),
-				updatedAt: poc.updatedAt.toISOString(),
 			};
 		},
 
-		getPOCs: async (_, { perPage = 20, page = 1 }, req) => {
+		getPOCs: async (_, { perPage = 20, page = 1 }) => {
 			// TODO: does this need to be the number of total documents, or only the count that match the search???
 			const total = await POC.countDocuments();
 			// TODO: add filtering to query
@@ -169,9 +160,6 @@ const resolvers = {
 				items: items.map(i => {
 					return {
 						...i._doc,
-						_id: i._id.toString(),
-						createdAt: i.createdAt.toISOString(),
-						updatedAt: i.updatedAt.toISOString(),
 					}
 				}),
 				total: total,
