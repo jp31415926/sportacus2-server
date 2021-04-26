@@ -10,19 +10,23 @@ const schema = new Schema({
 	title: {
 		type: String,
 	},
-	email: [{
-		type: String,
-	}],
-	phone: [{
-		type: String,
-	}],
+	email: [
+		{
+			type: String,
+		}
+	],
+	phone: [
+		{
+			type: String,
+		}
+	],
 	// optional user associated with this POC
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('POC', schema);

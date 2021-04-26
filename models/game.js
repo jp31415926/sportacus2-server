@@ -56,7 +56,7 @@ const schema = new Schema({
 		type: Number,
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Game', schema);

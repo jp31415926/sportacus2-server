@@ -5,8 +5,9 @@ const bcrypt = require('bcryptjs'); // user only
 const jwt = require('jsonwebtoken'); // user only
 
 const User = require('../../models/user');
+const catErrors = require('../../utils/catErrors');
 
-function validateUserInput(userInput) {
+const validateUserInput = userInput => {
 	const errors = [];
 	//console.log(userInput);
 	if (!validator.isEmail(userInput.email)) {
@@ -26,19 +27,10 @@ function validateUserInput(userInput) {
 	}
 	if (errors.length > 0) {
 		console.log(errors);
-		//const error = new Error('Invalid input');
 		const error = new Error(catErrors('Invalid input', errors));
-		//error.data = errors;
 		error.code = 422;
 		throw error;
 	}
-}
-
-function catErrors(error, errors) {
-	errors.forEach(e => {
-		error += '; ' + e.message;
-	});
-	return error
 }
 
 const resolvers = {
@@ -51,13 +43,13 @@ const resolvers = {
 			if (errors.length === 0) {
 				const existingUserEmail = await User.findOne({ email: userInput.email });
 				if (existingUserEmail) {
-					errors.push({ message: 'User email already used' });
+					errors.push({ message: 'Email already used' });
 				}
 			}
 			if (errors.length === 0) {
 				const existingUsername = await User.findOne({ username: userInput.username });
 				if (existingUsername) {
-					errors.push({ message: 'Username exists already' });
+					errors.push({ message: 'Username not available' });
 				}
 			}
 			if (errors.length > 0) {
@@ -80,16 +72,12 @@ const resolvers = {
 				.then(() => {
 					const result = {
 						...user._doc,
-						//_id: user._id.toString(),
 					};
 					//console.log(result);
 					return result;
 				})
 				.catch(err => {
-					errors.push({ message: err.toString() });
-					//const error = new Error('Database error creating user');
-					const error = new Error(catErrors('Database error creating user', errors));
-					//error.data = errors;
+					const error = new Error(catErrors('Database error updating User; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				});
@@ -97,14 +85,14 @@ const resolvers = {
 
 		updateUser: async (_, { _id, userInput }) => {
 			const errors = [];
-			var hashPassword = false;
+			let hashPassword = false;
 
-			var userOld = await User.findById(_id);
-			if (!userOld) {
+			const userOld = await User.findById(_id);
+			if (userOld === null) {
 				errors.push({ message: 'User not found' });
 			} else {
 				// if password is null or empty then set it to the old password, otherwise, validate and hash
-				if (!userInput.password) {
+				if (userInput.password === null) {
 					userInput.password = userOld.password;
 					hashPassword = false;
 				} else {
@@ -128,13 +116,11 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				//const error = new Error('Invalid input');
 				const error = new Error(catErrors('Invalid input', errors));
-				//error.data = errors;
 				error.code = 422;
 				throw error;
 			}
-			var hashedPw = '';
+			let hashedPw = '';
 			if (hashPassword) {
 				hashedPw = await bcrypt.hash(userInput.password, 12);
 			} else {
@@ -150,8 +136,7 @@ const resolvers = {
 
 			return userOld.save()
 				.catch(err => {
-					const error = new Error(catErrors('Database error creating user; ' + err.toString(), errors));
-					//error.data = errors;
+					const error = new Error(catErrors('Database error updating user; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -166,7 +151,7 @@ const resolvers = {
 				});
 		},
 
-		deleteUser: async (_, { _id }) => {
+		deleteUser: (_, { _id }) => {
 			const errors = [];
 			return User.findByIdAndDelete(_id)
 				.catch(err => {
@@ -177,13 +162,11 @@ const resolvers = {
 				.then(res => {
 					if (res) {
 						return true;
-					} else {
-						const error = new Error('User not found');
-						error.code = 401;
-						throw error;
 					}
-				})
-				;
+					const error = new Error('User not found');
+					error.code = 401;
+					throw error;
+				});
 		},
 	},
 

@@ -1,8 +1,9 @@
 const validator = require('validator');
 
 const POC = require('../../models/poc');
+const catErrors = require('../../utils/catErrors');
 
-function validatePOCInput(pocInput) {
+const validatePOCInput = pocInput => {
 	const errors = [];
 	//console.log(pocInput);
 	if (pocInput.name &&
@@ -12,8 +13,7 @@ function validatePOCInput(pocInput) {
 	// TODO: check email address and phone numbers
 	if (errors.length > 0) {
 		console.log(errors);
-		const error = new Error('Invalid input');
-		error.data = errors;
+		const error = new Error(catErrors('Invalid input', errors));
 		error.code = 422;
 		throw error;
 	}
@@ -34,8 +34,7 @@ const resolvers = {
 			}
 			if (errors.length > 0) {
 				//console.log(errors);
-				const error = new Error('Invalid input');
-				error.data = errors;
+				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
 				throw error;
 			}
@@ -54,8 +53,7 @@ const resolvers = {
 					return result;
 				})
 				.catch(err => {
-					const error = new Error('Database error creating POC');
-					error.data = errors;
+					const error = new Error(catErrors('Database error updating POC; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				});
@@ -64,8 +62,8 @@ const resolvers = {
 		updatePOC: async (_, { _id, pocInput }) => {
 			const errors = [];
 
-			var pocOld = await POC.findById(_id);
-			if (!pocOld) {
+			const pocOld = await POC.findById(_id);
+			if (pocOld === null) {
 				errors.push({ message: 'POC not found' });
 			} else {
 				validatePOCInput(pocInput);
@@ -79,8 +77,7 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				const error = new Error('Invalid input');
-				error.data = errors;
+				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
 				throw error;
 			}
@@ -91,9 +88,8 @@ const resolvers = {
 			pocOld.phone = pocInput.phone;
 
 			return pocOld.save()
-				.catch(() => {
-					const error = new Error('Database error updating POC');
-					error.data = errors;
+				.catch(err => {
+					const error = new Error(catErrors('Database error updating POC; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -109,23 +105,22 @@ const resolvers = {
 				});
 		},
 
-		deletePOC: async (_, { _id }) => {
+		deletePOC: (_, { _id }) => {
+			const errors = [];
 			return POC.findByIdAndDelete(_id)
 				.catch(err => {
-					const error = new Error('Database error');
+					const error = new Error(catErrors('Database error deleting POC; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
 				.then(res => {
 					if (res) {
 						return true;
-					} else {
-						const error = new Error('POC not found');
-						error.code = 401;
-						throw error;
 					}
-				})
-				;
+					const error = new Error('POC not found');
+					error.code = 401;
+					throw error;
+				});
 		},
 	},
 
@@ -151,7 +146,7 @@ const resolvers = {
 				.skip((page - 1) * perPage)
 				.limit(perPage);
 			if (!items) {
-				const error = new Error('No POCs found that match criteria.');
+				const error = new Error('No items that match criteria.');
 				error.code = 401;
 				throw error;
 			}

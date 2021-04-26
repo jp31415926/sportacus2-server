@@ -19,10 +19,12 @@ const schema = new Schema({
 	url: {
 		type: String,
 	},
-	poc: [{
-		type: Schema.Types.ObjectId,
-		ref: 'POC',
-	}],
+	poc: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'POC',
+		}
+	],
 	street1: {
 		type: String,
 	},
@@ -48,12 +50,14 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Venue',
 	},
-	group: [{
-		type: Schema.Types.ObjectId,
-		ref: 'Group',
-	}],
+	group: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Group',
+		}
+	],
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Venue', schema);

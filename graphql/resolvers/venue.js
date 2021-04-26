@@ -1,8 +1,9 @@
 const validator = require('validator');
 
 const Venue = require('../../models/venue');
+const catErrors = require('../../utils/catErrors');
 
-function validateVenueInput(venueInput) {
+const validateVenueInput = venueInput => {
 	const errors = [];
 	//console.log(venueInput);
 	if (venueInput.name &&
@@ -14,11 +15,10 @@ function validateVenueInput(venueInput) {
 		errors.push({ message: 'Venue longName too short!' });
 	}
 	// TODO: check lat and long
-	// TODO: check street address, poc, parent ref, children ref
+	// TODO: check street address, poc, parent ref
 	if (errors.length > 0) {
 		console.log(errors);
-		const error = new Error('Invalid input');
-		error.data = errors;
+		const error = new Error(catErrors('Invalid input', errors));
 		error.code = 422;
 		throw error;
 	}
@@ -39,8 +39,7 @@ const resolvers = {
 			}
 			if (errors.length > 0) {
 				//console.log(errors);
-				const error = new Error('Invalid input');
-				error.data = errors;
+				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
 				throw error;
 			}
@@ -69,8 +68,8 @@ const resolvers = {
 					return result;
 				})
 				.catch(err => {
-					const error = new Error('Database error creating venue:' + err.toString());
-					error.data = errors;
+					errors.push({ message: err.toString() });
+					const error = new Error(catErrors('Database error creating Venue', errors));
 					error.code = 422;
 					throw error;
 				});
@@ -79,8 +78,8 @@ const resolvers = {
 		updateVenue: async (_, { _id, venueInput }) => {
 			const errors = [];
 
-			var venueOld = await Venue.findById(_id);
-			if (!venueOld) {
+			const venueOld = await Venue.findById(_id);
+			if (venueOld === null) {
 				errors.push({ message: 'Venue not found' });
 			} else {
 				validateVenueInput(venueInput);
@@ -94,8 +93,7 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				const error = new Error('Invalid input');
-				error.data = errors;
+				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
 				throw error;
 			}
@@ -117,8 +115,7 @@ const resolvers = {
 
 			return venueOld.save()
 				.catch(err => {
-					const error = new Error('Database error updating venue');
-					error.data = errors;
+					const error = new Error(catErrors('Database error updating Venue; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -134,23 +131,22 @@ const resolvers = {
 				});
 		},
 
-		deleteVenue: async (_, { _id }) => {
+		deleteVenue: (_, { _id }) => {
+			const errors = [];
 			return Venue.findByIdAndDelete(_id)
 				.catch(err => {
-					const error = new Error('Database error');
+					const error = new Error(catErrors('Database error updating Venue; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
 				.then(res => {
 					if (res) {
 						return true;
-					} else {
-						const error = new Error('Venue not found');
-						error.code = 401;
-						throw error;
 					}
-				})
-				;
+					const error = new Error('Venue not found');
+					error.code = 401;
+					throw error;
+				});
 		},
 	},
 

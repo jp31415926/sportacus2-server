@@ -6,20 +6,10 @@
 	"license": "GPL-3.0-only",
 	"main": "server.js",
 	"scripts": {
+		"lint": "cp -n config-dist.js config.js; eslint --ext .jsx,.js .",
 		"test": "cp -n config-dist.js config.js; NODE_ENV=test mocha",
-		"start": "NODE_ENV=development nodemon -e js,graphql server.js",
+		"start": "cp -n config-dist.js config.js; NODE_ENV=development nodemon -e js,graphql server.js",
 		"start-server": "NODE_ENV=production node server.js"
-	},
-	"eslintConfig": {
-		"parserOptions": {
-			"ecmaVersion": 12
-		},
-		"env": {
-			"es6": true,
-			"node": true,
-			"mocha": true
-		},
-		"extends": "eslint:recommended"
 	},
 	"repository": {
 		"type": "git",
@@ -48,9 +38,10 @@
 	},
 	"devDependencies": {
 		"chai": "^4.3.4",
-		"eslint": "^7.24.0",
+		"eslint": "^7.25.0",
 		"mocha": "^8.3.2",
 		"nodemon": "^2.0.7",
-		"sinon": "^10.0.0"
+		"sinon": "^10.0.0",
+		"webpack": "^5.35.1"
 	}
 }

@@ -12,7 +12,7 @@ const schema = new Schema({
 		required: true,
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Role', schema);

@@ -12,7 +12,7 @@ const { mergeTypeDefs } = require('@graphql-tools/merge');
 //const { modifyObjectFields } = require("@graphql-tools/utils");
 
 // TODO: Put this into a separate module?
-const isAuthenticated = () => next => async (_, args, req, info) => {
+const isAuthenticated = () => next => /*async*/ (_, args, req, info) => {
 	// check if the current user is authenticated
 	// commented out for testing
 	// if (!req.isAuth) {
@@ -24,7 +24,7 @@ const isAuthenticated = () => next => async (_, args, req, info) => {
 	return next(_, args, req, info);
 };
 
-const hasPermission = (resource, permission) => next => async (_, args, req, info) => {
+const hasPermission = (resource, permission) => next => /*async*/ (_, args, req, info) => {
 	// check if current user has the provided role
 	console.log('check if user ' + req.userId + ' has ' + permission + ' permission for ' + resource + ' resource')
 	//if (!context.currentUser.roles || context.currentUser.roles.includes(role)) {
@@ -45,11 +45,26 @@ const hasPermission = (resource, permission) => next => async (_, args, req, inf
 
 const resolversComposition = {
 	'Query.login': [],
-	'Query.getUser': [isAuthenticated(), hasPermission('user', 'view')],
-	'Query.getUsers': [isAuthenticated(), hasPermission('user', 'list')],
-	'Mutation.createUser': [isAuthenticated(), hasPermission('user', 'create')],
-	'Mutation.deleteUser': [isAuthenticated(), hasPermission('user', 'delete')],
-	'Mutation.updateUser': [isAuthenticated(), hasPermission('user', 'update')],
+	'Query.getUser': [
+		isAuthenticated(),
+		hasPermission('user', 'view')
+	],
+	'Query.getUsers': [
+		isAuthenticated(),
+		hasPermission('user', 'list')
+	],
+	'Mutation.createUser': [
+		isAuthenticated(),
+		hasPermission('user', 'create')
+	],
+	'Mutation.deleteUser': [
+		isAuthenticated(),
+		hasPermission('user', 'delete')
+	],
+	'Mutation.updateUser': [
+		isAuthenticated(),
+		hasPermission('user', 'update')
+	],
 };
 
 const graphqlSchemas = loadFilesSync(path.join(__dirname, 'schemas', '*.graphql'));
@@ -59,7 +74,11 @@ const mergedResolvers = mergeResolvers(resolversArray);
 const graphqlResolvers = composeResolvers(mergedResolvers, resolversComposition);
 
 const schemaWithResolvers = makeExecutableSchema({
-	typeDefs: mergeTypeDefs([...scalarTypeDefs, ...graphqlSchemas]),
+	typeDefs: mergeTypeDefs(
+		[
+			...scalarTypeDefs,
+			...graphqlSchemas
+		]),
 	resolvers: graphqlResolvers,
 })
 

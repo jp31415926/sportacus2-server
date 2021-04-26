@@ -13,7 +13,7 @@ const schema = new Schema({
 	},
 
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Function', schema);

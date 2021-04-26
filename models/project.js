@@ -22,7 +22,7 @@ const schema = new Schema({
 		type: Boolean,
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Project', schema);

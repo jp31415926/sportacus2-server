@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 		return next();
 	}
 	const token = authHeader.split(' ')[1];
-	let decodedToken;
+	let decodedToken = null;
 	try {
 		decodedToken = jwt.verify(token, appConfig.app.secret);
 	} catch (err) {

@@ -10,10 +10,12 @@ const schema = new Schema({
 	longName: {
 		type: String,
 	},
-	coaches: [{
-		type: Schema.Types.ObjectId,
-		ref: 'POC',
-	}],
+	coaches: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'POC',
+		}
+	],
 	homeJerseyColor: {
 		type: String,
 	},
@@ -25,7 +27,7 @@ const schema = new Schema({
 		ref: 'Group',
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Team', schema);

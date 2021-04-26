@@ -13,18 +13,24 @@ const schema = new Schema({
 	searchKey: {
 		type: String,
 	},
-	adminPOCs: [{
-		type: Schema.Types.ObjectId,
-		ref: 'POC',
-	}],
-	refereePOCs: [{
-		type: Schema.Types.ObjectId,
-		ref: 'POC',
-	}],
-	coachPOCs: [{
-		type: Schema.Types.ObjectId,
-		ref: 'POC',
-	}],
+	adminPOCs: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'POC',
+		}
+	],
+	refereePOCs: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'POC',
+		}
+	],
+	coachPOCs: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'POC',
+		}
+	],
 	project: {
 		type: Schema.Types.ObjectId,
 		ref: 'Project',
@@ -37,7 +43,7 @@ const schema = new Schema({
 		ref: 'Group',
 	},
 },
-	{ timestamps: true }
+{ timestamps: true }
 );
 
 module.exports = mongoose.model('Group', schema);
