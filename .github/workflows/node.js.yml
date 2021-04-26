@@ -2,8 +2,6 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-# TODO: how do I setup mongoDB and connect to it within the test env??? Or is there a better way to test an API?
-
 # WARNING: Don't use tabs in this file. Apparently Github doesn't like it.
 
 name: Sportacus2 Server Node.js CI
@@ -27,6 +25,7 @@ jobs:
         mongodb-version: [4.0]
 
     steps:
+    - name: Check out Git repository
     - uses: actions/checkout@v2
 
     - name: Cache node modules ${{ matrix.node-version }}
@@ -44,7 +43,7 @@ jobs:
           ${{ runner.os }}-
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -57,8 +56,8 @@ jobs:
     - name: Install dependencies
       run: NODE_ENV=test npm install
 
-    - name: Run ESLint
-      run: eslint . --ext .js,.jsx,.ts,.tsx
-
     - name: Run tests
       run: npm test
+
+    - name: Run linters
+      run: npm run lint
