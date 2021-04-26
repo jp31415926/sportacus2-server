@@ -57,5 +57,8 @@ jobs:
     - name: Install dependencies
       run: NODE_ENV=test npm install
 
+		- name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx
+
     - name: Run tests
       run: npm test
