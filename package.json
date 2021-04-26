@@ -1,6 +1,7 @@
 {
 	"name": "sportacus2",
-	"version": "2.0.0",
+	"version": "0.1.0",
+	"versionAPI": "0.1.0",
 	"description": "Sportacus Server version 2",
 	"author": "John Price",
 	"license": "GPL-3.0-only",
@@ -8,6 +9,7 @@
 	"scripts": {
 		"lint": "cp -n config-dist.js config.js; eslint --ext .jsx,.js .",
 		"test": "cp -n config-dist.js config.js; NODE_ENV=test mocha",
+		"test-parallel": "cp -n config-dist.js config.js; NODE_ENV=test mocha --parallel",
 		"start": "cp -n config-dist.js config.js; NODE_ENV=development nodemon -e js,graphql server.js",
 		"start-server": "NODE_ENV=production node server.js"
 	},
@@ -41,7 +43,6 @@
 		"eslint": "^7.25.0",
 		"mocha": "^8.3.2",
 		"nodemon": "^2.0.7",
-		"sinon": "^10.0.0",
-		"webpack": "^5.35.1"
+		"sinon": "^10.0.0"
 	}
 }

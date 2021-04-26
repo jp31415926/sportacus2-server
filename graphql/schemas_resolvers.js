@@ -44,6 +44,7 @@ const hasPermission = (resource, permission) => next => /*async*/ (_, args, req,
 };
 
 const resolversComposition = {
+	'Query.version': [],
 	'Query.login': [],
 	'Query.getUser': [
 		isAuthenticated(),

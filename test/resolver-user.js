@@ -25,7 +25,12 @@ const testUserInfo = {
 describe('User functions', () => {
 	before(async () => {
 		await mongoose.connect('mongodb://' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
-			{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+			{
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+				useCreateIndex: true,
+				poolSize: 5, // increase pool size which allows more syncronous connections, and thus operations
+			});
 		await User.deleteMany();
 	});
 

@@ -1,0 +1,9 @@
+"""
+Version information
+"""
+type Version {
+	"Server application version"
+	versionServer: String!
+	"API version"
+	versionAPI: String!
+}

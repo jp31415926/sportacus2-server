@@ -3,26 +3,25 @@ schema {
 	mutation: Mutation
 }
 
-scalar DateTime
-
 type Mutation {
-	createUser(userInput: UserInput!): User!
-	updateUser(_id: ID!, userInput: UserInput!): User!
-	deleteUser(_id: ID!): Boolean!
-	createVenue(venueInput: VenueInput!): Venue!
-	updateVenue(_id: ID!, venueInput: VenueInput!): Venue!
-	deleteVenue(_id: ID!): Boolean!
 	createPOC(pocInput: POCInput!): POC!
-	updatePOC(_id: ID!, pocInput: POCInput!): POC!
+	createUser(userInput: UserInput!): User!
+	createVenue(venueInput: VenueInput!): Venue!
 	deletePOC(_id: ID!): Boolean!
+	deleteUser(_id: ID!): Boolean!
+	deleteVenue(_id: ID!): Boolean!
+	updatePOC(_id: ID!, pocInput: POCInput!): POC!
+	updateUser(_id: ID!, userInput: UserInput!): User!
+	updateVenue(_id: ID!, venueInput: VenueInput!): Venue!
 }
 
 type Query {
-	login(emailOrUsername: String!, password: String!): AuthData!
+	getPOC(_id: ID!): POC!
+	getPOCs(perPage: Int! = 20, page: Int! = 1): POCs!
 	getUser(_id: ID!): User!
 	getUsers(perPage: Int! = 20, page: Int! = 1): Users!
 	getVenue(_id: ID!): Venue!
 	getVenues(perPage: Int! = 20, page: Int! = 1): Venues!
-	getPOC(_id: ID!): POC!
-	getPOCs(perPage: Int! = 20, page: Int! = 1): POCs!
+	login(emailOrUsername: String!, password: String!): AuthData!
+	version: Version!
 }
