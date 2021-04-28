@@ -9,6 +9,7 @@ const schema = new Schema({
 	},
 	longName: {
 		type: String,
+		trim: true,
 	},
 	latitude: {
 		type: Number,
@@ -18,6 +19,7 @@ const schema = new Schema({
 	},
 	url: {
 		type: String,
+		trim: true,
 	},
 	poc: [
 		{
@@ -27,21 +29,27 @@ const schema = new Schema({
 	],
 	street1: {
 		type: String,
+		trim: true,
 	},
 	street2: {
 		type: String,
+		trim: true,
 	},
 	city: {
 		type: String,
+		trim: true,
 	},
 	state: {
 		type: String,
+		trim: true,
 	},
 	zipcode: {
 		type: String,
+		trim: true,
 	},
 	country: {
 		type: String,
+		trim: true,
 	},
 	subField: {
 		type: Boolean,

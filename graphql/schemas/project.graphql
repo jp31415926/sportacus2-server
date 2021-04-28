@@ -1,0 +1,23 @@
+type Project {
+	_id: ID!
+	name: String!
+	longName: DateTime
+	startDate: DateTime!
+	endDate: String!
+	archived: Boolean
+	createdAt: DateTime!
+	updatedAt: DateTime!
+}
+
+type Projects {
+	items: [Project!]!
+	total: UnsignedInt!
+}
+
+input ProjectInput {
+	name: String!
+	longName: String
+	startDate: String
+	endDate: String
+	archived: Boolean
+}

@@ -5,12 +5,15 @@ schema {
 
 type Mutation {
 	createPOC(pocInput: POCInput!): POC!
+	createProject(venueInput: VenueInput!): Venue!
 	createUser(userInput: UserInput!): User!
 	createVenue(venueInput: VenueInput!): Venue!
 	deletePOC(_id: ID!): Boolean!
+	deleteProject(_id: ID!): Boolean!
 	deleteUser(_id: ID!): Boolean!
 	deleteVenue(_id: ID!): Boolean!
 	updatePOC(_id: ID!, pocInput: POCInput!): POC!
+	updateProject(_id: ID!, projectInput: ProjectInput!): Project!
 	updateUser(_id: ID!, userInput: UserInput!): User!
 	updateVenue(_id: ID!, venueInput: VenueInput!): Venue!
 }
@@ -18,6 +21,8 @@ type Mutation {
 type Query {
 	getPOC(_id: ID!): POC!
 	getPOCs(perPage: Int! = 20, page: Int! = 1): POCs!
+	getProject(_id: ID!): Project!
+	getProjects(perPage: Int! = 20, page: Int! = 1): Projects!
 	getUser(_id: ID!): User!
 	getUsers(perPage: Int! = 20, page: Int! = 1): Users!
 	getVenue(_id: ID!): Venue!

@@ -66,6 +66,66 @@ const resolversComposition = {
 		isAuthenticated(),
 		hasPermission('user', 'update')
 	],
+	'Query.getProject': [
+		isAuthenticated(),
+		hasPermission('project', 'view')
+	],
+	'Query.getProjects': [
+		isAuthenticated(),
+		hasPermission('project', 'list')
+	],
+	'Mutation.createProject': [
+		isAuthenticated(),
+		hasPermission('project', 'create')
+	],
+	'Mutation.deleteProject': [
+		isAuthenticated(),
+		hasPermission('project', 'delete')
+	],
+	'Mutation.updateProject': [
+		isAuthenticated(),
+		hasPermission('project', 'update')
+	],
+	'Query.getVenue': [
+		isAuthenticated(),
+		hasPermission('venue', 'view')
+	],
+	'Query.getVenues': [
+		isAuthenticated(),
+		hasPermission('venue', 'list')
+	],
+	'Mutation.createVenue': [
+		isAuthenticated(),
+		hasPermission('venue', 'create')
+	],
+	'Mutation.deleteVenue': [
+		isAuthenticated(),
+		hasPermission('venue', 'delete')
+	],
+	'Mutation.updateVenue': [
+		isAuthenticated(),
+		hasPermission('venue', 'update')
+	],
+	'Query.getPOC': [
+		isAuthenticated(),
+		hasPermission('poc', 'view')
+	],
+	'Query.getPOCs': [
+		isAuthenticated(),
+		hasPermission('poc', 'list')
+	],
+	'Mutation.createPOC': [
+		isAuthenticated(),
+		hasPermission('poc', 'create')
+	],
+	'Mutation.deletePOC': [
+		isAuthenticated(),
+		hasPermission('poc', 'delete')
+	],
+	'Mutation.updatePOC': [
+		isAuthenticated(),
+		hasPermission('poc', 'update')
+	],
 };
 
 const graphqlSchemas = loadFilesSync(path.join(__dirname, 'schemas', '*.graphql'));

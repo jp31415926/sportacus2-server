@@ -3,28 +3,21 @@ const validator = require('validator');
 const POC = require('../../models/poc');
 const catErrors = require('../../utils/catErrors');
 
-const validatePOCInput = pocInput => {
-	const errors = [];
+const validatePOCInput = (pocInput, errors) => {
 	//console.log(pocInput);
 	if (pocInput.name &&
 		!validator.isLength(pocInput.name, { min: 2 })) {
 		errors.push({ message: 'POC name too short!' });
 	}
 	// TODO: check email address and phone numbers
-	if (errors.length > 0) {
-		console.log(errors);
-		const error = new Error(catErrors('Invalid input', errors));
-		error.code = 422;
-		throw error;
-	}
 }
 
 const resolvers = {
 	Mutation: {
 		createPOC: async (_, { pocInput }) => {
-			validatePOCInput(pocInput);
-
 			const errors = [];
+
+			validatePOCInput(pocInput, errors);
 
 			if (errors.length === 0) {
 				const existingPOCName = await POC.findOne({ name: pocInput.name });
@@ -48,6 +41,7 @@ const resolvers = {
 				.then(() => {
 					const result = {
 						...poc._doc,
+						ver: poc.__v,
 					};
 					//console.log(result);
 					return result;
@@ -66,7 +60,7 @@ const resolvers = {
 			if (pocOld === null) {
 				errors.push({ message: 'POC not found' });
 			} else {
-				validatePOCInput(pocInput);
+				validatePOCInput(pocInput, errors);
 				//console.log(pocInput);
 
 				if (errors.length === 0) {
@@ -86,6 +80,7 @@ const resolvers = {
 			pocOld.name = pocInput.name;
 			pocOld.email = pocInput.email;
 			pocOld.phone = pocInput.phone;
+			//pocOld.__v = pocInput.ver + 1;
 
 			return pocOld.save()
 				.catch(err => {

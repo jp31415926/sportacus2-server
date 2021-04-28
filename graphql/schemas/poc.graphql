@@ -5,6 +5,7 @@ type POC {
 	phone: [PhoneNumber]
 	createdAt: DateTime!
 	updatedAt: DateTime!
+	ver: UnsignedInt
 }
 
 type POCs {

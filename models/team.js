@@ -6,9 +6,11 @@ const schema = new Schema({
 		type: String,
 		unique: true,
 		required: true,
+		trim: true,
 	},
 	longName: {
 		type: String,
+		trim: true,
 	},
 	coaches: [
 		{
@@ -18,9 +20,11 @@ const schema = new Schema({
 	],
 	homeJerseyColor: {
 		type: String,
+		trim: true,
 	},
 	awayJerseyColor: {
 		type: String,
+		trim: true,
 	},
 	group: {
 		type: Schema.Types.ObjectId,
