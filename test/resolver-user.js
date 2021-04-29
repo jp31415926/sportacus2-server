@@ -1,9 +1,7 @@
 /* eslint-disable max-lines */
-const appConfig = require('../config');
+//const appConfig = require('../config');
 //const { doesNotMatch } = require('assert');
 const { expect } = require('chai');
-//const fs = require('fs');
-const mongoose = require("mongoose");
 
 const graphqlResolver = require('../graphql/resolvers/user');
 
@@ -25,19 +23,11 @@ const testUserInfo = {
 // eslint-disable-next-line max-lines-per-function
 describe('User functions', () => {
 	before(async () => {
-		await mongoose.connect('mongodb://' + appConfig.db.hostname + ':' + appConfig.db.port + '/' + appConfig.db.name,
-			{
-				useNewUrlParser: true,
-				useUnifiedTopology: true,
-				useCreateIndex: true,
-				poolSize: 5, // increase pool size which allows more syncronous connections, and thus operations
-			});
 		await User.deleteMany();
 	});
 
-	after(async () => {
-		await mongoose.disconnect();
-	});
+	// after(async () => {
+	// });
 
 	it('createUser should create a new user', async () => {
 		const _ = null;
