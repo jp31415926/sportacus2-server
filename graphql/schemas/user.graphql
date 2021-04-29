@@ -2,7 +2,9 @@
 Authentication info from the server about the logged in user.
 """
 type AuthData {
+	"An authorization token"
 	token: String!
+	"The user document identifier"
 	userId: ID!
 }
 
@@ -11,13 +13,23 @@ A User received from the server. It will never have a password field.
 """
 type User {
 	_id: ID!
+	"A unique username, 2 character minimum (required)"
 	username: String!
+	"User's first name (required)"
 	firstName: String!
+	"User's last name (required)"
 	lastName: String!
+	"A unique email address, 5 character minimum (required)"
 	email: EmailAddress!
+	"Date and time of last successful login"
 	lastSuccessfulLogin: DateTime!
+	"Date and time of last unsuccessful login"
 	lastUnsuccessfulLogin: DateTime!
+	"Roles that the user belongs to."
+	roles: [String!]!
+	"Date and time that this user registered"
 	createdAt: DateTime!
+	"Date and time of the last update to this user document"
 	updatedAt: DateTime!
 	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
 	ver: UnsignedInt!
@@ -28,7 +40,9 @@ A list of Users received from the server and a total. The total is the
 total number of users in the system (this will probably change in the future).
 """
 type Users {
+	"Array of zero or more user documents"
 	items: [User!]!
+	"Total number of documents this user has access to"
 	total: UnsignedInt!
 }
 
@@ -46,6 +60,8 @@ input UserInput {
 	email: EmailAddress!
 	"User's password (plaintext). Leave empty on update to make no change."
 	password: String
+	"Roles that the user belongs to."
+	roles: [String!]!
 	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
 	ver: UnsignedInt!
 }
