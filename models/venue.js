@@ -65,7 +65,11 @@ const schema = new Schema({
 		}
 	],
 },
-{ timestamps: true }
+{
+	timestamps: true,
+	optimisticConcurrency: true,
+	versionKey: 'ver'
+}
 );
 
 module.exports = mongoose.model('Venue', schema);

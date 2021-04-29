@@ -12,7 +12,11 @@ const schema = new Schema({
 		required: true,
 	},
 },
-{ timestamps: true }
+{
+	timestamps: true,
+	optimisticConcurrency: true,
+	versionKey: 'ver'
+}
 );
 
 module.exports = mongoose.model('Role', schema);

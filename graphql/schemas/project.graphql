@@ -7,6 +7,8 @@ type Project {
 	archived: Boolean
 	createdAt: DateTime!
 	updatedAt: DateTime!
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
+	ver: UnsignedInt!
 }
 
 type Projects {
@@ -20,4 +22,6 @@ input ProjectInput {
 	startDate: String
 	endDate: String
 	archived: Boolean
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
+	ver: UnsignedInt!
 }

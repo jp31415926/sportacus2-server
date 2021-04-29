@@ -19,6 +19,8 @@ type User {
 	lastUnsuccessfulLogin: DateTime!
 	createdAt: DateTime!
 	updatedAt: DateTime!
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
+	ver: UnsignedInt!
 }
 
 """
@@ -44,4 +46,6 @@ input UserInput {
 	email: EmailAddress!
 	"User's password (plaintext). Leave empty on update to make no change."
 	password: String
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
+	ver: UnsignedInt!
 }

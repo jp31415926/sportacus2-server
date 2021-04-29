@@ -41,7 +41,6 @@ const resolvers = {
 				.then(() => {
 					const result = {
 						...poc._doc,
-						ver: poc.__v,
 					};
 					//console.log(result);
 					return result;
@@ -80,7 +79,6 @@ const resolvers = {
 			pocOld.name = pocInput.name;
 			pocOld.email = pocInput.email;
 			pocOld.phone = pocInput.phone;
-			//pocOld.__v = pocInput.ver + 1;
 
 			return pocOld.save()
 				.catch(err => {

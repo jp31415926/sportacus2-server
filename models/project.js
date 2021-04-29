@@ -33,7 +33,11 @@ const schema = new Schema({
 		type: Boolean,
 	},
 },
-{ timestamps: true }
+{
+	timestamps: true,
+	optimisticConcurrency: true,
+	versionKey: 'ver'
+}
 );
 
 module.exports = mongoose.model('Project', schema);

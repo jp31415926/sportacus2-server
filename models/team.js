@@ -31,7 +31,11 @@ const schema = new Schema({
 		ref: 'Group',
 	},
 },
-{ timestamps: true }
+{
+	timestamps: true,
+	optimisticConcurrency: true,
+	versionKey: 'ver'
+}
 );
 
 module.exports = mongoose.model('Team', schema);

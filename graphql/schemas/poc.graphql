@@ -4,8 +4,9 @@ type POC {
 	email: [EmailAddress]
 	phone: [PhoneNumber]
 	createdAt: DateTime!
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
 	updatedAt: DateTime!
-	ver: UnsignedInt
+	ver: UnsignedInt!
 }
 
 type POCs {
@@ -17,4 +18,6 @@ input POCInput {
 	name: String!
 	email: [EmailAddress]
 	phone: [PhoneNumber]
+	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
+	ver: UnsignedInt!
 }

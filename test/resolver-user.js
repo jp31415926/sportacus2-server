@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 const appConfig = require('../config');
 //const { doesNotMatch } = require('assert');
 const { expect } = require('chai');
@@ -65,6 +66,7 @@ describe('User functions', () => {
 		expect(result.lastSuccessfulLogin.getTime()).to.equal(testUserInfo.lastSuccessfulLogin.getTime());
 		expect(result.lastUnsuccessfulLogin.getTime()).to.equal(testUserInfo.lastUnsuccessfulLogin.getTime());
 		expect(result.password).to.not.equal(userInput.password);
+		expect(result.ver).to.equal(0);
 	});
 
 	it('login with username should provide a login token and update successful login datetime', async () => {
@@ -244,6 +246,7 @@ describe('User functions', () => {
 		expect(result.lastSuccessfulLogin.getTime()).to.equal(0); // not allowed to update this from the API
 		expect(result.lastUnsuccessfulLogin.getTime()).to.equal(0); // not allowed to update this from the API
 		expect(result.password).to.not.equal(userInput.password);
+		expect(result.ver).to.equal(1);
 	});
 
 	it('getUser should get a user by id', async () => {
@@ -273,6 +276,7 @@ describe('User functions', () => {
 		expect(result.lastName).to.equal(testUserInfo.lastName);
 		expect(result.lastSuccessfulLogin.getTime()).to.equal(12345);
 		expect(result.lastUnsuccessfulLogin.getTime()).to.equal(67890);
+		expect(result.ver).to.equal(0);
 	});
 
 	it('deleteUser should delete a user by id', async () => {
