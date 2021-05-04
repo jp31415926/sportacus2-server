@@ -84,6 +84,11 @@ const resolvers = {
 					}
 				}
 			}
+			if (errors.length === 0) {
+				if (projectInput.ver === null) {
+					errors.push({ message: 'ver is a required field for updates!' });
+				}
+			}
 			if (errors.length > 0) {
 				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
