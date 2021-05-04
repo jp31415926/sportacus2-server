@@ -213,8 +213,9 @@ describe('User functions', () => {
 			lastSuccessfulLogin: testUserInfo.lastSuccessfulLogin,
 			lastUnsuccessfulLogin: testUserInfo.lastUnsuccessfulLogin,
 		};
-		const user = await User.create(userInput);
+		let user = await User.create(userInput);
 		const testUserId = user._id.toString();
+		user = await User.findById(testUserId);
 
 		userInput.email = 'updateUser2_' + testUserInfo.email;
 		userInput.username = 'updateUser_' + testUserInfo.username + '2';
@@ -223,6 +224,7 @@ describe('User functions', () => {
 		userInput.lastName = testUserInfo.lastName + '2';
 		userInput.lastSuccessfulLogin = new Date(12345);
 		userInput.lastUnsuccessfulLogin = new Date(67890);
+		userInput.ver = user.ver;
 
 		const result = await graphqlResolver.Mutation.updateUser(_, { _id: testUserId, userInput }, req);
 

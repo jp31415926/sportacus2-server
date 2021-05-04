@@ -47,6 +47,4 @@ input VenueInput {
 	subField: Boolean
 	"Parent venue reference, if exists"
 	parent: ID
-	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
-	ver: UnsignedInt!
 }

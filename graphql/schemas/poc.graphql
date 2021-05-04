@@ -18,6 +18,4 @@ input POCInput {
 	name: String!
 	email: [EmailAddress]
 	phone: [PhoneNumber]
-	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
-	ver: UnsignedInt!
 }

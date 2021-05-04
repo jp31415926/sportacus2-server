@@ -79,6 +79,7 @@ const resolvers = {
 			pocOld.name = pocInput.name;
 			pocOld.email = pocInput.email;
 			pocOld.phone = pocInput.phone;
+			pocOld.ver = pocInput.ver;
 
 			return pocOld.save()
 				.catch(err => {

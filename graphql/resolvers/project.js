@@ -96,6 +96,7 @@ const resolvers = {
 			projectOld.startDate = projectInput.startDate;
 			projectOld.endDate = projectInput.endDate;
 			projectOld.archived = projectInput.archived;
+			projectOld.ver = projectInput.ver;
 
 			return projectOld.save()
 				.catch(err => {

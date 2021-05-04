@@ -1,6 +1,6 @@
 
 module.exports = (error, errors) => {
-	let err = '';
+	let err = error;
 	errors.forEach(e => {
 		err += '; ' + e.message;
 	});

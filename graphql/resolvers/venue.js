@@ -112,6 +112,7 @@ const resolvers = {
 			venueOld.url = venueInput.url;
 			venueOld.poc = venueInput.poc;
 			venueOld.parent = venueInput.parent;
+			venueOld.ver = venueInput.ver;
 
 			return venueOld.save()
 				.catch(err => {

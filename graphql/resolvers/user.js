@@ -103,6 +103,11 @@ const resolvers = {
 				//console.log(userInput);
 
 				if (errors.length === 0) {
+					if (userInput.ver === null) {
+						errors.push({ message: 'ver is a required field for updates!' });
+					}
+				}
+				if (errors.length === 0) {
 					const existingUserEmail = await User.findOne({ email: userInput.email });
 					if (existingUserEmail && existingUserEmail._id.toString() !== _id) {
 						errors.push({ message: 'Email already registered.' });
@@ -133,9 +138,11 @@ const resolvers = {
 			userOld.firstName = userInput.firstName;
 			userOld.lastName = userInput.lastName;
 			userOld.password = hashedPw;
+			userOld.ver = userInput.ver;
 
 			return userOld.save()
 				.catch(err => {
+					console.log(err);
 					const error = new Error(catErrors('Database error updating user; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
