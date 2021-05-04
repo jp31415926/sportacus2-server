@@ -172,14 +172,14 @@ const resolvers = {
 
 	Query: {
 		login: async (_, { emailOrUsername, password }) => {
-			let user = await User.findOne({ username: emailOrUsername });
+			const user = await User.findOne({ $or: [
+				{ username: emailOrUsername },
+				{ email: emailOrUsername }
+			] });
 			if (!user) {
-				user = await User.findOne({ email: emailOrUsername });
-				if (!user) {
-					const error = new Error('User not found.');
-					error.code = 401;
-					throw error;
-				}
+				const error = new Error('User not found.');
+				error.code = 401;
+				throw error;
 			}
 			const isEqual = await bcrypt.compare(password, user.password);
 			if (!isEqual) {
