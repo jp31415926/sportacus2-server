@@ -38,25 +38,13 @@ const resolvers = {
 				}
 			}
 			if (errors.length > 0) {
-				//console.log(errors);
+				console.log(errors);
 				const error = new Error(catErrors('Invalid input', errors));
 				error.code = 422;
 				throw error;
 			}
 			const venue = new Venue({
-				name: venueInput.name,
-				longName: venueInput.longName,
-				street1: venueInput.street1,
-				street2: venueInput.street2,
-				city: venueInput.city,
-				state: venueInput.state,
-				zipcode: venueInput.zipcode,
-				country: venueInput.country,
-				latitude: venueInput.latitude,
-				longitude: venueInput.longitude,
-				url: venueInput.url,
-				poc: venueInput.poc,
-				parent: venueInput.parent,
+				...venueInput,
 			});
 
 			return venue.save()
@@ -64,12 +52,10 @@ const resolvers = {
 					const result = {
 						...venue._doc,
 					};
-					//console.log(result);
 					return result;
 				})
 				.catch(err => {
-					errors.push({ message: err.toString() });
-					const error = new Error(catErrors('Database error creating Venue', errors));
+					const error = new Error(catErrors('Database error creating Venue; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				});
@@ -83,18 +69,17 @@ const resolvers = {
 				errors.push({ message: 'Venue not found' });
 			} else {
 				validateVenueInput(venueInput);
-				//console.log(venueInput);
 
+				if (errors.length === 0) {
+					if (venueInput.ver === null) {
+						errors.push({ message: 'ver is a required field for updates!' });
+					}
+				}
 				if (errors.length === 0) {
 					const existingVenueName = await Venue.findOne({ name: venueInput.name });
 					if (existingVenueName && existingVenueName._id.toString() !== _id) {
 						errors.push({ message: 'Venue name already used' });
 					}
-				}
-			}
-			if (errors.length === 0) {
-				if (venueInput.ver === null) {
-					errors.push({ message: 'ver is a required field for updates!' });
 				}
 			}
 			if (errors.length > 0) {
@@ -104,36 +89,23 @@ const resolvers = {
 			}
 
 			// update old venue with new info
-			venueOld.name = venueInput.name;
-			venueOld.longName = venueInput.longName;
-			venueOld.street1 = venueInput.street1;
-			venueOld.street2 = venueInput.street2;
-			venueOld.city = venueInput.city;
-			venueOld.state = venueInput.state;
-			venueOld.zipcode = venueInput.zipcode;
-			venueOld.country = venueInput.country;
-			venueOld.latitude = venueInput.latitude;
-			venueOld.longitude = venueInput.longitude;
-			venueOld.url = venueInput.url;
-			venueOld.poc = venueInput.poc;
-			venueOld.parent = venueInput.parent;
-			venueOld.ver = venueInput.ver;
+			Object.assign(venueOld, { ...venueOld._doc, ...venueInput });
 
 			return venueOld.save()
-				.catch(err => {
-					const error = new Error(catErrors('Database error updating Venue; ' + err.toString(), errors));
-					error.code = 422;
-					throw error;
-				})
 				.then(() => {
 					// TODO: should we return the database data? This requires that we do another query, possibly unnessarily
 					return Venue.findById(_id);
 				})
 				.then(venue => {
-					const result = {
+					return {
 						...venue._doc,
 					};
-					return result;
+				})
+				.catch(err => {
+					console.log(err);
+					const error = new Error(catErrors('Database error updating item; ' + err.toString(), errors));
+					error.code = 422;
+					throw error;
 				});
 		},
 
@@ -141,7 +113,7 @@ const resolvers = {
 			const errors = [];
 			return Venue.findByIdAndDelete(_id)
 				.catch(err => {
-					const error = new Error(catErrors('Database error updating Venue; ' + err.toString(), errors));
+					const error = new Error(catErrors('Database error deleting item; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -149,7 +121,7 @@ const resolvers = {
 					if (res) {
 						return true;
 					}
-					const error = new Error('Venue not found');
+					const error = new Error('Item not found');
 					error.code = 401;
 					throw error;
 				});
@@ -180,7 +152,7 @@ const resolvers = {
 				.skip((page - 1) * perPage)
 				.limit(perPage);
 			if (!items) {
-				const error = new Error('No venues found that match criteria.');
+				const error = new Error('No items found that match criteria.');
 				error.code = 401;
 				throw error;
 			}

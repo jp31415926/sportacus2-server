@@ -18,13 +18,13 @@ const testUserInfo = {
 	lastUnsuccessfulLogin: new Date(0),
 	createdAt: '',
 	updatedAt: '',
+	ver: 0,
 };
 
 // eslint-disable-next-line max-lines-per-function
 describe('User functions', () => {
-	before(async () => {
-		await User.deleteMany();
-	});
+	// before(async () => {
+	// });
 
 	// after(async () => {
 	// });
@@ -222,8 +222,8 @@ describe('User functions', () => {
 		userInput.password = testUserInfo.password + '2';
 		userInput.firstName = testUserInfo.firstName + '2';
 		userInput.lastName = testUserInfo.lastName + '2';
-		userInput.lastSuccessfulLogin = new Date(12345);
-		userInput.lastUnsuccessfulLogin = new Date(67890);
+		//userInput.lastSuccessfulLogin = new Date(12345);
+		//userInput.lastUnsuccessfulLogin = new Date(67890);
 		userInput.ver = user.ver;
 
 		const result = await graphqlResolver.Mutation.updateUser(_, { _id: testUserId, userInput }, req);

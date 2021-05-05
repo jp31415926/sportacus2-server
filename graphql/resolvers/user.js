@@ -55,16 +55,12 @@ const resolvers = {
 			if (errors.length > 0) {
 				console.log(errors);
 				const error = new Error(catErrors('Invalid input', errors));
-				//error.data = errors;
 				error.code = 422;
 				throw error;
 			}
 			const hashedPw = await bcrypt.hash(userInput.password, 12);
 			const user = new User({
-				username: userInput.username,
-				email: userInput.email,
-				firstName: userInput.firstName,
-				lastName: userInput.lastName,
+				...userInput,
 				password: hashedPw,
 			});
 
@@ -73,11 +69,10 @@ const resolvers = {
 					const result = {
 						...user._doc,
 					};
-					//console.log(result);
 					return result;
 				})
 				.catch(err => {
-					const error = new Error(catErrors('Database error updating User; ' + err.toString(), errors));
+					const error = new Error(catErrors('Database error creating User; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				});
@@ -100,7 +95,6 @@ const resolvers = {
 				}
 
 				validateUserInput(userInput);
-				//console.log(userInput);
 
 				if (errors.length === 0) {
 					if (userInput.ver === null) {
@@ -132,21 +126,9 @@ const resolvers = {
 				hashedPw = userInput.password;
 			}
 
-			// update old user with new info
-			userOld.username = userInput.username;
-			userOld.email = userInput.email;
-			userOld.firstName = userInput.firstName;
-			userOld.lastName = userInput.lastName;
-			userOld.password = hashedPw;
-			userOld.ver = userInput.ver;
+			Object.assign(userOld, { ...userOld._doc, ...userInput, password: hashedPw });
 
 			return userOld.save()
-				.catch(err => {
-					console.log(err);
-					const error = new Error(catErrors('Database error updating user; ' + err.toString(), errors));
-					error.code = 422;
-					throw error;
-				})
 				.then(() => {
 					// TODO: should we return the database data? This requires that we do another query, possibly unnessarily
 					return User.findById(_id);
@@ -155,6 +137,12 @@ const resolvers = {
 					return {
 						...user._doc,
 					};
+				})
+				.catch(err => {
+					console.log(err);
+					const error = new Error(catErrors('Database error updating item; ' + err.toString(), errors));
+					error.code = 422;
+					throw error;
 				});
 		},
 
@@ -162,7 +150,7 @@ const resolvers = {
 			const errors = [];
 			return User.findByIdAndDelete(_id)
 				.catch(err => {
-					const error = new Error(catErrors('Database error deleting user; ' + err.toString(), errors));
+					const error = new Error(catErrors('Database error deleting item; ' + err.toString(), errors));
 					error.code = 422;
 					throw error;
 				})
@@ -170,7 +158,7 @@ const resolvers = {
 					if (res) {
 						return true;
 					}
-					const error = new Error('User not found');
+					const error = new Error('Item not found');
 					error.code = 401;
 					throw error;
 				});
@@ -206,7 +194,7 @@ const resolvers = {
 			);
 			user.lastSuccessfulLogin = Date();
 			await user.save();
-			return { token: token, userId: user._id/*.toString()*/ };
+			return { token: token, userId: user._id };
 		},
 
 		getUser: async (_, { _id }) => {
@@ -230,7 +218,7 @@ const resolvers = {
 				.skip((page - 1) * perPage)
 				.limit(perPage);
 			if (!items) {
-				const error = new Error('No items that match criteria.');
+				const error = new Error('No items found that match criteria.');
 				error.code = 401;
 				throw error;
 			}

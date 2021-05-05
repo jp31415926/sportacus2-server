@@ -60,8 +60,6 @@ input UserInput {
 	email: EmailAddress!
 	"User's password (plaintext). Leave empty on update to make no change."
 	password: String
-	"Roles that the user belongs to."
-	roles: [String!]!
 	"Version of document. Must be included with updates. Ensures documents don't get out of sync (see Optimistic Concurrency)."
 	ver: UnsignedInt
 }
